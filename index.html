@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NYC Midnight 500FC 2026 — Round 1 Bracket</title>
+<style>
+  :root {
+    --bg:#0e1117; --panel:#161b22; --panel2:#1f2630; --line:#30363d;
+    --ink:#e6edf3; --ink-dim:#9da7b3; --ink-mute:#6b7480;
+    --accent:#ffb347; --accent2:#7aa6ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif}
+  a{color:var(--accent2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1480px;margin:0 auto;padding:28px 22px 80px}
+  header.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}
+  h1{font-size:30px;margin:0 0 6px;letter-spacing:-0.5px}
+  h1 .small{font-size:14px;color:var(--ink-dim);letter-spacing:0;font-weight:normal;margin-left:8px}
+  .sub{color:var(--ink-dim);font-size:13px}
+  .totals{display:flex;gap:18px;flex-wrap:wrap}
+  .totals .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
+  .totals .stat .n{font-size:22px;font-weight:600}
+  .totals .stat .l{font-size:11px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.5px}
+  h2{font-size:18px;margin:32px 0 4px;letter-spacing:-0.2px}
+  h2 .small{font-size:12px;color:var(--ink-mute);font-weight:normal;margin-left:8px}
+  .section-note{color:var(--ink-dim);font-size:13px;margin-bottom:14px;max-width:880px}
+
+  /* Genre lanes */
+  .lanes{display:flex;flex-direction:column;gap:14px}
+  .lane{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .lane-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel2)}
+  .lane-head .swatch{width:14px;height:14px;border-radius:3px}
+  .lane-head .name{font-weight:600}
+  .lane-head .count{color:var(--ink-mute);font-size:12px;margin-left:auto}
+  .lane-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;padding:12px}
+
+  /* Cluster boxes */
+  .cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  .cluster{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .cluster h3{margin:0 0 8px;font-size:14px;letter-spacing:0.2px}
+  .cluster .count{color:var(--ink-mute);font-size:11px;float:right}
+  .cluster .chips{display:flex;flex-wrap:wrap;gap:6px}
+
+  /* Group chip and card */
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer;transition:transform .08s ease}
+  .chip:hover{transform:translateY(-1px);border-color:#555}
+  .chip .gnum{font-weight:700;font-size:11px;padding:1px 6px;border-radius:6px;background:#0e1117;color:#fff}
+  .chip .gtitle{color:var(--ink-dim);font-size:11px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* Card grid (group catalog) */
+  .filterbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .filterbar input,.filterbar select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font:inherit}
+  .filterbar input{min-width:240px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative;cursor:pointer;transition:border-color .1s ease}
+  .card:hover{border-color:#4a5260}
+  .card .id{font-size:11px;color:var(--ink-mute);letter-spacing:0.4px}
+  .card .gen{position:absolute;top:10px;right:10px;font-size:10px;padding:2px 8px;border-radius:999px;font-weight:600;letter-spacing:0.2px}
+  .card .ao{font-size:15px;margin:8px 0 4px;font-weight:600;letter-spacing:-0.2px}
+  .card .ao .verb{color:var(--accent)}
+  .card .ao .obj{color:var(--accent2)}
+  .card .meta{display:flex;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--ink-mute);margin-top:6px}
+  .card .meta .flag{padding:2px 6px;background:var(--panel2);border-radius:6px;border:1px solid var(--line)}
+
+  /* Region section */
+  .region-row{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+  .bar-list{display:flex;flex-direction:column;gap:6px}
+  .bar{display:grid;grid-template-columns:140px 1fr 60px;gap:8px;align-items:center;font-size:12px}
+  .bar .lbl{color:var(--ink-dim);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .track{background:var(--panel2);border:1px solid var(--line);border-radius:4px;height:14px;position:relative;overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,#5b8def,#7aa6ff)}
+  .bar .v{color:var(--ink);font-variant-numeric:tabular-nums}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .panel h3{margin:0 0 10px;font-size:14px;color:var(--ink-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+  .donut-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+  .donut-cell{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;align-items:center}
+  .donut-cell .name{font-size:12px;color:var(--ink-dim)}
+  .donut-cell .big{font-size:18px;font-weight:700;margin-top:2px}
+  .donut-cell .sub{font-size:11px;color:var(--ink-mute)}
+
+  /* Rival map */
+  .rival-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px}
+  .rival-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .rival-card .pivot{font-weight:600}
+  .rival-card .rivals{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .rival-card .rival{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font-size:12px;padding:6px 8px;background:var(--panel2);border-radius:6px}
+  .rival-card .rival .why{color:var(--ink-mute);font-size:11px}
+  .rival-card .rival .score{font-variant-numeric:tabular-nums;color:var(--accent)}
+
+  /* Modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-start;justify-content:center;padding:60px 20px;z-index:50;overflow:auto}
+  .modal-bg.open{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:680px;width:100%;padding:22px}
+  .modal h3{margin:0 0 6px;font-size:24px;letter-spacing:-0.4px}
+  .modal .row{display:grid;grid-template-columns:120px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .modal .row .k{color:var(--ink-mute);text-transform:uppercase;font-size:11px;letter-spacing:0.4px;padding-top:2px}
+  .modal .country-bars{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+  .modal .close{float:right;cursor:pointer;color:var(--ink-mute);font-size:24px;line-height:1}
+  .modal .close:hover{color:var(--ink)}
+
+  /* Tabs */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+  .tab{padding:9px 14px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;color:var(--ink-dim);font-size:13px}
+  .tab.active{background:var(--panel);border-color:var(--line);color:var(--ink)}
+  .tab .n{display:inline-block;background:var(--panel2);color:var(--ink-mute);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:6px}
+  .panel-tab{display:none}
+  .panel-tab.active{display:block}
+
+  footer{color:var(--ink-mute);font-size:11px;margin-top:36px;text-align:center}
+
+  /* Rounds funnel */
+  .funnel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+  .round-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;position:relative}
+  .round-card .rh{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .round-card .rh .num{font-size:11px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;background:var(--panel2);padding:2px 8px;border-radius:999px}
+  .round-card h3{margin:0;font-size:18px;letter-spacing:-0.2px}
+  .round-card .dates{color:var(--ink-dim);font-size:12px;margin-bottom:14px}
+  .round-card .big-stat{display:flex;align-items:baseline;gap:6px;margin:14px 0 4px}
+  .round-card .big-stat .n{font-size:36px;font-weight:700;font-variant-numeric:tabular-nums}
+  .round-card .big-stat .u{color:var(--ink-mute);font-size:13px}
+  .round-card .sublabel{color:var(--ink-dim);font-size:12px}
+  .round-card .prompt{margin-top:14px;padding:10px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;font-size:12px}
+  .round-card .prompt .p-row{display:grid;grid-template-columns:70px 1fr;gap:8px;padding:2px 0}
+  .round-card .prompt .p-row .k{color:var(--ink-mute);text-transform:uppercase;font-size:10px;letter-spacing:0.4px;padding-top:3px}
+  .round-card .adv{margin-top:14px;font-size:13px;color:var(--accent)}
+  .round-card .adv-arrow{position:absolute;right:-22px;top:50%;transform:translateY(-50%);font-size:26px;color:var(--accent);z-index:2}
+  @media (max-width: 980px) { .funnel{grid-template-columns:1fr} .round-card .adv-arrow{display:none} }
+
+  .rule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:8px}
+  .rule-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .rule-card h4{margin:0 0 6px;font-size:13px;color:var(--accent);letter-spacing:0.2px}
+  .rule-card p{margin:0;color:var(--ink-dim);font-size:12px}
+  .rule-card .strong{color:var(--ink);font-weight:600}
+
+  /* Economics */
+  .money-headline{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+  .money-stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .money-stat .lbl{font-size:11px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.5px}
+  .money-stat .val{font-size:28px;font-weight:700;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+  .money-stat .pct{font-size:12px;color:var(--ink-dim)}
+  .money-stat.fee{border-color:#3a4a30}
+  .money-stat.fee .val{color:#a8d99c}
+  .money-stat.prize{border-color:#3a4570}
+  .money-stat.prize .val{color:#9bb1ff}
+  .money-stat.charity{border-color:#705a30}
+  .money-stat.charity .val{color:#e7c069}
+  .money-stat.ops{border-color:#5e2f37}
+  .money-stat.ops .val{color:#e08a99}
+
+  .flow{margin:18px 0 8px}
+  .flow-bar{display:flex;height:42px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .flow-seg{display:flex;align-items:center;justify-content:center;padding:0 10px;font-size:12px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.4);min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .flow-legend{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;font-size:12px;color:var(--ink-dim)}
+  .flow-legend .dot{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:middle;margin-right:6px}
+
+  .prize-table{width:100%;border-collapse:collapse;font-size:13px}
+  .prize-table th, .prize-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+  .prize-table th{color:var(--ink-mute);text-transform:uppercase;font-size:11px;letter-spacing:0.4px;font-weight:600}
+  .prize-table td.right{text-align:right;font-variant-numeric:tabular-nums}
+  .prize-table tr.total td{font-weight:700;color:var(--accent2);background:var(--panel2);border-top:1px solid var(--line)}
+
+  .charity-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:8px}
+  .charity-card{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px}
+  .charity-card .nm{font-weight:600;font-size:13px}
+  .charity-card .ds{color:var(--ink-mute);font-size:11px;margin-top:4px}
+
+  .odds-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .odds-table th,.odds-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  .odds-table th{color:var(--ink-mute);text-transform:uppercase;font-size:11px;letter-spacing:0.4px;font-weight:600;text-align:left}
+  .odds-table td.r{text-align:right}
+
+  /* Compete */
+  .gar-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0;margin-bottom:20px;overflow:hidden}
+  .gar-head{display:flex;align-items:baseline;gap:14px;padding:16px 20px;background:linear-gradient(180deg, var(--panel2), var(--panel));border-bottom:1px solid var(--line)}
+  .gar-head h3{margin:0;font-size:22px;letter-spacing:-0.3px}
+  .gar-head .who{color:var(--ink-dim);font-size:13px;margin-left:6px}
+  .gar-head .grp{margin-left:auto;color:var(--ink);background:var(--accent);padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+  .gar-body{padding:18px 20px}
+  .gar-prompt{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+  .gar-prompt .pp{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:140px}
+  .gar-prompt .pp .k{font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.4px}
+  .gar-prompt .pp .v{font-size:14px;font-weight:600;color:var(--ink);margin-top:2px}
+  .gar-summary{color:var(--ink-dim);font-size:13px;margin-bottom:18px;padding:12px;background:var(--panel2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0}
+  .threat-block{margin:14px 0}
+  .threat-header{display:flex;align-items:baseline;gap:8px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;font-weight:700}
+  .threat-tier1{color:#ff7a8a}
+  .threat-tier2{color:#e7c069}
+  .threat-tier3{color:#9bb1ff}
+  .threat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px}
+  .threat-card{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px}
+  .threat-card.t1{border-color:#5a2e35;background:linear-gradient(180deg, #2a1c20, var(--panel2))}
+  .threat-card.t2{border-color:#5e4b25;background:linear-gradient(180deg, #2a2316, var(--panel2))}
+  .threat-card.t3{border-color:#2f3d5c;background:linear-gradient(180deg, #1a2236, var(--panel2))}
+  .threat-card .nm{font-weight:700;font-size:14px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .threat-card .nm .star{color:#ff7a8a}
+  .threat-card .bk{font-size:10px;padding:1px 6px;border-radius:999px;background:var(--panel);color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.4px;font-weight:600}
+  .threat-card .lc{color:var(--ink-mute);font-size:12px;margin:2px 0 8px}
+  .threat-card .nt{color:var(--ink-dim);font-size:12px;line-height:1.45}
+
+  .roster-grid{margin-top:18px}
+  .roster-grid h4{margin:0 0 8px;font-size:12px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
+  .roster-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px;font-size:12px}
+  .roster-cell{padding:6px 10px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+  .roster-cell.self{background:#1a2614;border-color:#3a5e2c;color:#a8d99c;font-weight:700}
+  .roster-cell.t1{background:#2a1c20;border-color:#5a2e35;color:#ff7a8a;font-weight:600}
+  .roster-cell.t2{background:#2a2316;border-color:#5e4b25;color:#e7c069;font-weight:600}
+  .roster-cell.t3{background:#1a2236;border-color:#2f3d5c;color:#9bb1ff}
+  .roster-cell .ln{font-size:11px;color:var(--ink-mute);font-weight:400}
+
+  /* Prior finalists */
+  .year-block{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+  .year-block h3{margin:0 0 8px;font-size:16px;display:flex;align-items:baseline;gap:8px}
+  .year-block h3 .small{color:var(--ink-mute);font-size:12px;font-weight:normal}
+  .fin-table{width:100%;border-collapse:collapse;font-size:12px}
+  .fin-table td{padding:5px 8px;border-bottom:1px solid var(--line);color:var(--ink-dim)}
+  .fin-table td:first-child{color:var(--accent);font-weight:700;width:50px}
+  .fin-table td:nth-child(2){color:var(--ink);font-weight:600;width:200px}
+  .fin-table tr.match td{background:#2a1c20}
+  .fin-table tr.match td:nth-child(2)::after{content:" ◀ in Group 84"; color:var(--accent);font-weight:600;font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>NYC Midnight 500-Word Fiction Challenge 2026<span class="small">Round 1 Assignments</span></h1>
+      <div class="sub">Scraped from <a href="https://www.nycmidnight.com/500fc/2026-1stroundassignments" target="_blank">nycmidnight.com</a>. Each group of ~41 writers got the same genre / action / object trio and has 48 hours to write a 500-word story; the top scorers in each group advance.</div>
+    </div>
+    <div class="totals" id="totals"></div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="rounds">Rounds &amp; Rules</div>
+    <div class="tab" data-tab="economics">Economics</div>
+    <div class="tab" data-tab="publishing">Publishing Status</div>
+    <div class="tab" data-tab="compete">⚔️ Compete</div>
+    <div class="tab" data-tab="finalists">Prior Finalists</div>
+    <div class="tab" data-tab="lanes">By Genre <span class="n">11</span></div>
+    <div class="tab" data-tab="object">By Object Theme <span class="n" id="oc">0</span></div>
+    <div class="tab" data-tab="action">By Action Theme <span class="n" id="ac">0</span></div>
+    <div class="tab" data-tab="regions">Regions</div>
+    <div class="tab" data-tab="rivals">Closest Rivals</div>
+    <div class="tab" data-tab="catalog">All 86 Groups</div>
+  </div>
+
+  <section class="panel-tab active" data-pane="rounds">
+    <div class="section-note">Three rounds. Each round has a 48-hour writing window and a new prompt assignment. Only ~0.29% of writers reach the prize tier (10 winners out of 3,456 entrants). Past years' rules confirm round 2 swaps the action prompt for a <span style="color:var(--accent)">location</span> prompt, and the final round opens the genre.</div>
+    <div class="funnel" id="funnel"></div>
+    <div class="rule-grid" id="ruleGrid"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="economics">
+    <div class="section-note">The challenge is funded by the writers. NYC Midnight takes ~$45 per entry. With 3,456 writers, that's <span class="strong" style="color:var(--ink)">~$155K</span> in fees collected. Roughly 8% goes back out as prize money, 2% goes to charity (writer's choice), and the rest funds judges, judging-feedback time, software, and the company itself.</div>
+    <div class="money-headline" id="moneyHeadline"></div>
+    <h2>Where the $155,520 goes <span class="small">approximate</span></h2>
+    <div class="flow">
+      <div class="flow-bar" id="flowBar"></div>
+      <div class="flow-legend" id="flowLegend"></div>
+    </div>
+    <h2 style="margin-top:28px">Prize ladder</h2>
+    <div class="section-note">Top 10 of 88 finalists win cash. "EV" is the per-writer expected value assuming all 3,456 entrants are equally likely to land each slot — a worst-case lower bound for skilled writers, and an interesting baseline for the rest.</div>
+    <table class="prize-table" id="prizeTable"></table>
+
+    <h2 style="margin-top:28px">Random-skill odds</h2>
+    <div class="section-note">If skill is zero and outcomes are uniform within each round, here's the route to a prize.</div>
+    <table class="odds-table" id="oddsTable"></table>
+
+    <h2 style="margin-top:28px">Charity recipients <span class="small">2% of each fee · ~$3,110 total · writer chooses</span></h2>
+    <div class="charity-grid" id="charityGrid"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="compete">
+    <div class="section-note">Three Garskes are competing this year in three different groups. Each faces ~39 other writers, with top-10 advancing. The strongest known threats per group are flagged below — researched via web search for prior NYC Midnight rankings and published works. Tom's group is the toughest; Valerie's group has the only confirmed prior 500FC finalist (Acadia Hansen, #7 in 2025).</div>
+    <div id="competeFamily"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="finalists">
+    <div class="section-note">The complete list of top-10 finalists and Honorable Mentions across the three prior years of the 500-word Fiction Challenge (2023–2025). 50 writers total. Use this as the "watch list" — these are the people who have demonstrably executed at this contest at the highest level. None appear in the three Garske groups for 2026 EXCEPT <span style="color:var(--accent)">Acadia Hansen</span> (2025 #7, now in Valerie's group 84).</div>
+    <div id="finalistsByYear"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="publishing">
+    <div class="section-note">A random sample of 50 writers (every 69th name from the alphabetized roster) — each looked up via web search for evidence of published work. Most contestants are not visibly published. ~12% are traditionally published, another ~6% have indie books on Amazon/Goodreads, ~12% have lit-mag bylines or screen/stage credits without books, and the remaining 70% are either unpublished, uncurated hobbyists, or have names too common to disambiguate from a quick search.</div>
+    <div class="money-headline" id="pubHeadline" style="margin-bottom:18px"></div>
+    <h2>Sample distribution</h2>
+    <div class="flow"><div class="flow-bar" id="pubFlowBar"></div><div class="flow-legend" id="pubFlowLegend"></div></div>
+    <h2 style="margin-top:24px">All 50 sampled writers</h2>
+    <div class="section-note">Click any row for the source detail. Researched via parallel web search of name + city.</div>
+    <table class="prize-table" id="pubTable"></table>
+  </section>
+
+  <section class="panel-tab" data-pane="lanes" id="paneLanes">
+    <div class="section-note">All 86 groups laid out in lanes by genre. Each chip is a group — click for the full prompt and country breakdown. Genres with the most groups (and therefore the most writers) dominate the contest's center of gravity.</div>
+    <div class="lanes" id="lanes"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="object">
+    <div class="section-note">Groups bucketed by the kind of object they were given. Groups in the same bucket are competing on similar creative territory — e.g. eleven groups have to write a story revolving around a piece of food.</div>
+    <div class="cluster-grid" id="objectClusters"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="action">
+    <div class="section-note">Groups bucketed by the type of action verb. Movement, eating, and social/romance verbs dominate this round.</div>
+    <div class="cluster-grid" id="actionClusters"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="regions">
+    <div class="section-note">Where the 3,456 writers come from. The challenge is heavily US- and UK-skewed, but every group has international competitors.</div>
+    <div class="region-row">
+      <div class="panel">
+        <h3>Top countries</h3>
+        <div class="bar-list" id="countryBars"></div>
+      </div>
+      <div class="panel">
+        <h3>By continent</h3>
+        <div class="donut-row" id="continents"></div>
+      </div>
+    </div>
+    <div style="height:18px"></div>
+    <div class="panel">
+      <h3>Genre × Country tilt — which genres skew which way?</h3>
+      <div id="genreTilt"></div>
+    </div>
+  </section>
+
+  <section class="panel-tab" data-pane="rivals">
+    <div class="section-note">For each group, the three other groups with the most similar prompt. Similarity scoring: +3 same genre, +2 same object theme, +2 same action theme, +1 same word in the action, +1 same word in the object.</div>
+    <div class="rival-grid" id="rivals"></div>
+  </section>
+
+  <section class="panel-tab" data-pane="catalog">
+    <div class="filterbar">
+      <input id="search" placeholder="Search prompt or object…">
+      <select id="filterGenre"><option value="">All genres</option></select>
+      <select id="filterCountry"><option value="">All countries</option></select>
+      <span class="sub" id="catalogCount"></span>
+    </div>
+    <div class="grid" id="catalog"></div>
+  </section>
+
+  <footer>Static snapshot · generated <span id="ts"></span> · data from public Airtable embed</footer>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const groupsById = Object.fromEntries(GROUPS.map(g => [g.id, g]));
+const findTheme = (themes, id) => {
+  for (const [name, ids] of Object.entries(themes)) if (ids.includes(id)) return name;
+  return "Other";
+};
+GROUPS.forEach(g => {
+  g.objectTheme = findTheme(OBJECT_THEMES, g.id);
+  g.actionTheme = findTheme(ACTION_THEMES, g.id);
+});
+
+// Rounds funnel
+const ROUNDS = [
+  {n: 1, name: "1st Round", dates: "May 29–31, 2026", writers: 3456, groups: 86, perGroup: 40, advance: "Top 10 / group", advanceTo: 860, prompt: {Genre: "Assigned", Action: "Assigned", Object: "Assigned"}, note: "Random groups of ~40 writers each; same prompt across the group."},
+  {n: 2, name: "2nd Round", dates: "Jul 17–19, 2026", writers: 860, groups: 22, perGroup: 39, advance: "Top 4 / group", advanceTo: 88, prompt: {Genre: "Assigned", Location: "Assigned", Object: "Assigned"}, note: "New random groups. Prompt format swaps Action for Location (per 2025 precedent)."},
+  {n: 3, name: "Final Round", dates: "Sep 11–13, 2026", writers: 88, groups: 1, perGroup: 88, advance: "Top 10 ranked", advanceTo: 10, prompt: {Genre: "Open", Action: "Assigned", Object: "Assigned"}, note: "Single pool of 88. Genre is open. Top 10 take cash prizes (≈0.29% of original entrants)."},
+];
+
+const RULES = [
+  {t: "Length & penalties", b: "<span class='strong'>500 words max</span>, no minimum. 1–25 over: <span class='strong'>−10%</span> score penalty. 26+ over: <span class='strong'>disqualified</span>."},
+  {t: "Time window", b: "<span class='strong'>48 hours</span> per round, ending 11:59 PM Eastern Sunday. Written from scratch — no pre-existing stories."},
+  {t: "Anonymous judging", b: "Name appears nowhere in the story or title page. Pen names allowed if registered."},
+  {t: "Prompts are mandatory", b: "The action must <span class='strong'>happen</span> in the story (not just be referenced in dialogue). The object must be <span class='strong'>physically present</span> (not just mentioned)."},
+  {t: "Format", b: "12pt Courier or Times New Roman; .doc/.docx/.txt/.rtf only; title page = title + 2-sentence synopsis; bold/italic OK; no images."},
+  {t: "Genre lock", b: "Must adhere closely to assigned genre or risk DQ. Light elements of other genres are fine, but the dominant tone must match. No reassignments — same prompt for everyone in your group."},
+  {t: "AI banned", b: "No AI tools may be used to create the story, in whole or in part."},
+  {t: "IP", b: "Writer owns the story. NYC Midnight may publish title + synopsis for publicity; full publication requires a separate agreement."},
+];
+
+(() => {
+  $("#funnel").innerHTML = ROUNDS.map((r, i) => {
+    const promptRows = Object.entries(r.prompt).map(([k, v]) => `<div class="p-row"><span class="k">${k}</span><span>${v}</span></div>`).join("");
+    const isLast = i === ROUNDS.length - 1;
+    return `<div class="round-card">
+      <div class="rh"><span class="num">Round ${r.n}</span></div>
+      <h3>${r.name}</h3>
+      <div class="dates">${r.dates}</div>
+      <div class="big-stat"><span class="n">${r.writers.toLocaleString()}</span><span class="u">writers</span></div>
+      <div class="sublabel">in ${r.groups} ${r.groups === 1 ? 'final pool' : 'groups'}${r.groups>1 ? ' (~' + r.perGroup + ' / group)' : ''}</div>
+      <div class="prompt">${promptRows}</div>
+      <div class="adv">→ ${r.advance} = <span class="strong" style="color:var(--ink)">${r.advanceTo.toLocaleString()}</span> ${isLast ? 'winners' : 'advance'}</div>
+      <div style="color:var(--ink-mute);font-size:11px;margin-top:8px;font-style:italic">${r.note}</div>
+      ${isLast ? '' : '<div class="adv-arrow">→</div>'}
+    </div>`;
+  }).join("");
+  $("#ruleGrid").innerHTML = RULES.map(r => `<div class="rule-card"><h4>${r.t}</h4><p>${r.b}</p></div>`).join("");
+})();
+
+// Economics
+const FEE = 45;
+const TOTAL_WRITERS = 3456;
+const TOTAL_FEES = FEE * TOTAL_WRITERS;
+const PRIZES = [
+  {place: 1, amt: 5250},
+  {place: 2, amt: 2750},
+  {place: 3, amt: 1500},
+  {place: 4, amt: 750},
+  {place: 5, amt: 500},
+  {place: 6, amt: 400},
+  {place: 7, amt: 300},
+  {place: 8, amt: 250},
+  {place: 9, amt: 200},
+  {place: 10, amt: 150},
+];
+const PRIZE_TOTAL = PRIZES.reduce((s, p) => s + p.amt, 0);
+const CHARITY_RATE = 0.02;
+const CHARITY_TOTAL = Math.round(TOTAL_FEES * CHARITY_RATE);
+const OPS_TOTAL = TOTAL_FEES - PRIZE_TOTAL - CHARITY_TOTAL;
+
+const CHARITIES = [
+  {n: "Doctors Without Borders", d: "Médecins Sans Frontières — emergency medical care worldwide"},
+  {n: "Drop Site News", d: "Independent journalism, politics & warfare reporting"},
+  {n: "Little Free Library", d: "195,000+ book-sharing boxes, 50 states + 128 countries"},
+  {n: "NRDC", d: "Natural Resources Defense Council — environment & ecosystems"},
+  {n: "Room to Read", d: "Literacy & gender equality for kids in low-income communities"},
+  {n: "Save the Children", d: "Children's rights, health, safety, and education globally"},
+  {n: "World Central Kitchen", d: "400M+ meals served in disaster zones since 2010"},
+];
+
+(() => {
+  const $$$ = (id) => $("#" + id);
+  $$$("moneyHeadline").innerHTML = [
+    {k: "fee", lbl: "Entry fee", val: "$" + FEE, sub: "per writer"},
+    {k: "fee", lbl: "Total fees collected", val: "$" + TOTAL_FEES.toLocaleString(), sub: TOTAL_WRITERS.toLocaleString() + " × $" + FEE},
+    {k: "prize", lbl: "Prize pool", val: "$" + PRIZE_TOTAL.toLocaleString(), sub: (PRIZE_TOTAL / TOTAL_FEES * 100).toFixed(1) + "% of fees"},
+    {k: "charity", lbl: "To charity", val: "$" + CHARITY_TOTAL.toLocaleString(), sub: "2% of each fee"},
+    {k: "ops", lbl: "Operations & company", val: "$" + OPS_TOTAL.toLocaleString(), sub: (OPS_TOTAL / TOTAL_FEES * 100).toFixed(1) + "% of fees"},
+  ].map(s => `<div class="money-stat ${s.k}"><div class="lbl">${s.lbl}</div><div class="val">${s.val}</div><div class="pct">${s.sub}</div></div>`).join("");
+
+  const flowSegs = [
+    {lbl: "Operations", val: OPS_TOTAL, col: "#9b3447"},
+    {lbl: "Prizes", val: PRIZE_TOTAL, col: "#3a4570"},
+    {lbl: "Charity", val: CHARITY_TOTAL, col: "#705a30"},
+  ];
+  $$$("flowBar").innerHTML = flowSegs.map(s => `<div class="flow-seg" style="background:${s.col};flex:${s.val}">${s.lbl} · $${s.val.toLocaleString()} (${(s.val/TOTAL_FEES*100).toFixed(1)}%)</div>`).join("");
+  $$$("flowLegend").innerHTML = flowSegs.map(s => `<span><span class="dot" style="background:${s.col}"></span>${s.lbl}: $${s.val.toLocaleString()}</span>`).join("");
+
+  const rows = PRIZES.map(p => {
+    const probUniform = 1 / TOTAL_WRITERS;
+    const ev = p.amt * probUniform;
+    return `<tr><td>${p.place}${p.place===1?'st':p.place===2?'nd':p.place===3?'rd':'th'}</td><td class="right">$${p.amt.toLocaleString()}</td><td class="right">1 in ${TOTAL_WRITERS.toLocaleString()}</td><td class="right">$${ev.toFixed(3)}</td></tr>`;
+  }).join("");
+  $$$("prizeTable").innerHTML = `<thead><tr><th>Place</th><th class="right">Cash</th><th class="right">Random odds</th><th class="right">EV / writer</th></tr></thead><tbody>${rows}<tr class="total"><td>Total</td><td class="right">$${PRIZE_TOTAL.toLocaleString()}</td><td class="right">10 in ${TOTAL_WRITERS.toLocaleString()} = ${(10/TOTAL_WRITERS*100).toFixed(2)}%</td><td class="right">$${(PRIZE_TOTAL/TOTAL_WRITERS).toFixed(2)}</td></tr></tbody>`;
+
+  const probR1 = 10/40, probR2 = 4/40, probR3 = 10/88;
+  $$$("oddsTable").innerHTML = `<thead><tr><th>Stage</th><th class="r">Reach if random</th><th class="r">Cumulative</th><th class="r">Drop-off</th></tr></thead><tbody>
+    <tr><td>Make Round 2 (top 10 of ~40 per group)</td><td class="r">${(probR1*100).toFixed(1)}%</td><td class="r">${(probR1*100).toFixed(1)}%</td><td class="r">3,456 → 860</td></tr>
+    <tr><td>Make Final (top 4 of ~40 per group)</td><td class="r">${(probR2*100).toFixed(1)}%</td><td class="r">${(probR1*probR2*100).toFixed(2)}%</td><td class="r">860 → 88</td></tr>
+    <tr><td>Win a prize (top 10 of 88)</td><td class="r">${(probR3*100).toFixed(1)}%</td><td class="r">${(probR1*probR2*probR3*100).toFixed(3)}%</td><td class="r">88 → 10</td></tr>
+    <tr class="total"><td>Random-skill prize odds</td><td class="r">—</td><td class="r">${(probR1*probR2*probR3*100).toFixed(3)}%</td><td class="r">1 in ${Math.round(1/(probR1*probR2*probR3)).toLocaleString()}</td></tr>
+  </tbody>`;
+
+  $$$("charityGrid").innerHTML = CHARITIES.map(c => `<div class="charity-card"><div class="nm">${c.n}</div><div class="ds">${c.d}</div></div>`).join("");
+})();
+
+// Compete tab
+(() => {
+  const bucketLabels = {
+    TRAD_PUB:"Trad pub", INDIE_PUB:"Indie pub", SHORT_PUB:"Short pub",
+    NYCM_VET:"NYCM Vet", HOBBYIST:"Hobbyist", UNCLEAR:"Unclear", NONE:"No findings"
+  };
+  const renderThreat = (t, tier) => `<div class="threat-card t${tier}">
+    <div class="nm">${tier===1?'<span class="star">★</span>':''}${t.name} <span class="bk">${bucketLabels[t.bucket]||t.bucket}</span></div>
+    <div class="lc">${t.loc}</div>
+    <div class="nt">${t.note}</div>
+  </div>`;
+
+  const buildGarCard = (key, g) => {
+    // Build tier lookup for the roster
+    const tierByName = {};
+    (g.tier1||[]).forEach(t => tierByName[t.name.toLowerCase()] = 1);
+    (g.tier2||[]).forEach(t => tierByName[t.name.toLowerCase()] = 2);
+    (g.tier3||[]).forEach(t => tierByName[t.name.toLowerCase()] = 3);
+
+    const tierBlocks = [];
+    if (g.tier1.length) tierBlocks.push(`<div class="threat-block"><div class="threat-header threat-tier1">★ Tier 1 — Confirmed Prior Finalist / NYCM Medalist</div><div class="threat-list">${g.tier1.map(t=>renderThreat(t,1)).join("")}</div></div>`);
+    if (g.tier2.length) tierBlocks.push(`<div class="threat-block"><div class="threat-header threat-tier2">Tier 2 — Credentialed</div><div class="threat-list">${g.tier2.map(t=>renderThreat(t,2)).join("")}</div></div>`);
+    if (g.tier3.length) tierBlocks.push(`<div class="threat-block"><div class="threat-header threat-tier3">Tier 3 — Watch</div><div class="threat-list">${g.tier3.map(t=>renderThreat(t,3)).join("")}</div></div>`);
+
+    const rosterCells = g.roster.map(r => {
+      const [name, loc] = r.split(" | ");
+      const isSelf = name.toLowerCase() === g.name.toLowerCase();
+      const tier = tierByName[name.toLowerCase()];
+      const cls = isSelf ? "self" : tier ? `t${tier}` : "";
+      return `<div class="roster-cell ${cls}" title="${r}">
+        <span>${name}${isSelf?' ⭐':''}</span>
+        <span class="ln">${loc}</span>
+      </div>`;
+    }).join("");
+
+    return `<div class="gar-card">
+      <div class="gar-head">
+        <h3>${g.name}</h3>
+        <span class="who">${g.loc}</span>
+        <span class="grp">Group ${g.group}</span>
+      </div>
+      <div class="gar-body">
+        <div class="gar-prompt">
+          <div class="pp"><div class="k">Genre</div><div class="v">${g.prompt.genre}</div></div>
+          <div class="pp"><div class="k">Action</div><div class="v">${g.prompt.action}</div></div>
+          <div class="pp"><div class="k">Object</div><div class="v">${g.prompt.object}</div></div>
+        </div>
+        <div class="gar-summary">${g.summary}</div>
+        ${tierBlocks.join("")}
+        <div class="roster-grid">
+          <h4>All 40 in Group ${g.group} <span style="color:var(--ink-mute);font-weight:normal;text-transform:none;letter-spacing:0">— Garske + 39 competitors</span></h4>
+          <div class="roster-list">${rosterCells}</div>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  $("#competeFamily").innerHTML = ['tom','benton','valerie'].map(k => buildGarCard(k, COMPETE[k])).join("");
+})();
+
+// Prior finalists tab
+(() => {
+  // Mark Acadia Hansen as a match (she's in G84)
+  const matchNames = new Set(['Acadia Hansen']);
+  const byYear = {};
+  PRIOR_FINALISTS.forEach(f => {
+    if (!byYear[f.year]) byYear[f.year] = [];
+    byYear[f.year].push(f);
+  });
+  const years = Object.keys(byYear).sort().reverse();
+  $("#finalistsByYear").innerHTML = years.map(y => {
+    const rows = byYear[y].map(f => `<tr class="${matchNames.has(f.name)?'match':''}"><td>${f.place}</td><td>${f.name}</td><td>${f.story}</td></tr>`).join("");
+    return `<div class="year-block"><h3>${y} <span class="small">${byYear[y].length} writers · top-10 + Honorable Mentions</span></h3><table class="fin-table"><tbody>${rows}</tbody></table></div>`;
+  }).join("");
+})();
+
+// Publishing status
+(() => {
+  const counts = {};
+  for (const w of PUBLISHING_SAMPLE) counts[w.bucket] = (counts[w.bucket]||0) + 1;
+  const order = ["TRAD_PUB","INDIE_PUB","SHORT_PUB","HOBBYIST","UNCLEAR","NONE"];
+  const n = PUBLISHING_SAMPLE.length;
+  const publishedAny = (counts.TRAD_PUB||0) + (counts.INDIE_PUB||0) + (counts.SHORT_PUB||0);
+  const estTradFull = Math.round((counts.TRAD_PUB||0)/n * TOTAL_WRITERS);
+  const estAnyFull = Math.round(publishedAny/n * TOTAL_WRITERS);
+  const headline = [
+    {lbl: "Sample size", val: n, sub: "of 3,456 (~1.4%)"},
+    {lbl: "Trad. published", val: (counts.TRAD_PUB||0), sub: ((counts.TRAD_PUB||0)/n*100).toFixed(0)+"% · ~"+estTradFull.toLocaleString()+" of 3,456"},
+    {lbl: "Any publication", val: publishedAny, sub: (publishedAny/n*100).toFixed(0)+"% · ~"+estAnyFull.toLocaleString()+" of 3,456"},
+    {lbl: "No findings", val: (counts.NONE||0), sub: ((counts.NONE||0)/n*100).toFixed(0)+"% · invisible online"},
+    {lbl: "Unclear", val: (counts.UNCLEAR||0), sub: ((counts.UNCLEAR||0)/n*100).toFixed(0)+"% · common-name collisions"},
+  ];
+  $("#pubHeadline").innerHTML = headline.map(s => `<div class="money-stat"><div class="lbl">${s.lbl}</div><div class="val" style="color:var(--ink)">${s.val}</div><div class="pct">${s.sub}</div></div>`).join("");
+
+  $("#pubFlowBar").innerHTML = order.map(b => {
+    const c = counts[b]||0; if (!c) return "";
+    return `<div class="flow-seg" style="background:${PUB_BUCKETS[b].color};flex:${c};color:#0e1117;text-shadow:none;font-weight:700" title="${PUB_BUCKETS[b].desc}">${PUB_BUCKETS[b].label} · ${c} (${(c/n*100).toFixed(0)}%)</div>`;
+  }).join("");
+  $("#pubFlowLegend").innerHTML = order.map(b => {
+    const c = counts[b]||0; if (!c) return "";
+    return `<span><span class="dot" style="background:${PUB_BUCKETS[b].color}"></span>${PUB_BUCKETS[b].label}: ${c}</span>`;
+  }).join("");
+
+  const rows = PUBLISHING_SAMPLE.map(w => `<tr title="${w.note.replace(/"/g,'&quot;')}">
+    <td>${w.name}</td><td style="color:var(--ink-dim)">${w.loc}</td>
+    <td><span style="background:${PUB_BUCKETS[w.bucket].color};color:#0e1117;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700">${PUB_BUCKETS[w.bucket].label}</span></td>
+    <td style="color:var(--ink-dim);font-size:12px">${w.note}</td>
+  </tr>`).join("");
+  $("#pubTable").innerHTML = `<thead><tr><th>Writer</th><th>Location</th><th>Status</th><th>Note</th></tr></thead><tbody>${rows}</tbody>`;
+})();
+
+// Totals
+(() => {
+  const totalWriters = GROUPS.reduce((s, g) => s + g.writers, 0);
+  const allCountries = new Set();
+  GROUPS.forEach(g => Object.keys(g.countries).forEach(c => allCountries.add(c)));
+  const totalGenres = new Set(GROUPS.map(g => g.genre)).size;
+  $("#totals").innerHTML = [
+    {n: GROUPS.length, l: "Groups"},
+    {n: totalWriters.toLocaleString(), l: "Writers"},
+    {n: totalGenres, l: "Genres"},
+    {n: allCountries.size, l: "Countries"},
+  ].map(s => `<div class="stat"><div class="n">${s.n}</div><div class="l">${s.l}</div></div>`).join("");
+  $("#oc").textContent = Object.keys(OBJECT_THEMES).length;
+  $("#ac").textContent = Object.keys(ACTION_THEMES).length;
+  $("#ts").textContent = new Date().toLocaleString();
+})();
+
+// Tabs
+$$(".tab").forEach(t => t.addEventListener("click", () => {
+  $$(".tab").forEach(x => x.classList.remove("active"));
+  $$(".panel-tab").forEach(x => x.classList.remove("active"));
+  t.classList.add("active");
+  $(`.panel-tab[data-pane="${t.dataset.tab}"]`).classList.add("active");
+}));
+
+// Chip
+const chip = (g) => {
+  const color = GENRE_COLORS[g.genre] || "#444";
+  return `<span class="chip" data-id="${g.id}" title="${g.genre} · ${g.action} · ${g.object}"><span class="gnum" style="background:${color}">#${g.id}</span><span class="gtitle">${g.action} · ${g.object}</span></span>`;
+};
+
+// Genre lanes
+(() => {
+  const byGenre = {};
+  GROUPS.forEach(g => (byGenre[g.genre] = byGenre[g.genre] || []).push(g));
+  const sortedGenres = Object.entries(byGenre).sort((a, b) => b[1].length - a[1].length);
+  $("#lanes").innerHTML = sortedGenres.map(([gen, list]) => {
+    const writers = list.reduce((s, g) => s + g.writers, 0);
+    return `<div class="lane">
+      <div class="lane-head">
+        <span class="swatch" style="background:${GENRE_COLORS[gen] || '#444'}"></span>
+        <span class="name">${gen}</span>
+        <span class="count">${list.length} groups · ${writers.toLocaleString()} writers</span>
+      </div>
+      <div class="lane-body">${list.sort((a,b)=>a.id-b.id).map(chip).join("")}</div>
+    </div>`;
+  }).join("");
+})();
+
+// Object clusters
+(() => {
+  const sorted = Object.entries(OBJECT_THEMES).sort((a, b) => b[1].length - a[1].length);
+  $("#objectClusters").innerHTML = sorted.map(([name, ids]) => {
+    const items = ids.map(id => groupsById[id]).filter(Boolean);
+    return `<div class="cluster">
+      <h3>${name}<span class="count">${items.length} groups</span></h3>
+      <div class="chips">${items.map(chip).join("")}</div>
+    </div>`;
+  }).join("");
+})();
+
+// Action clusters
+(() => {
+  const sorted = Object.entries(ACTION_THEMES).sort((a, b) => b[1].length - a[1].length);
+  $("#actionClusters").innerHTML = sorted.map(([name, ids]) => {
+    const items = ids.map(id => groupsById[id]).filter(Boolean);
+    return `<div class="cluster">
+      <h3>${name}<span class="count">${items.length} groups</span></h3>
+      <div class="chips">${items.map(chip).join("")}</div>
+    </div>`;
+  }).join("");
+})();
+
+// Regions: top countries
+(() => {
+  const tot = {};
+  GROUPS.forEach(g => Object.entries(g.countries).forEach(([c, n]) => tot[c] = (tot[c] || 0) + n));
+  const list = Object.entries(tot).sort((a, b) => b[1] - a[1]);
+  const max = list[0][1];
+  $("#countryBars").innerHTML = list.slice(0, 25).map(([c, n]) => `
+    <div class="bar"><div class="lbl">${c}</div><div class="track"><div class="fill" style="width:${(n/max*100).toFixed(1)}%"></div></div><div class="v">${n}</div></div>
+  `).join("");
+
+  const contTot = {};
+  Object.entries(tot).forEach(([c, n]) => {
+    const cont = CONTINENT[c] || "Unknown";
+    contTot[cont] = (contTot[cont] || 0) + n;
+  });
+  const total = Object.values(contTot).reduce((s, n) => s + n, 0);
+  $("#continents").innerHTML = Object.entries(contTot).sort((a, b) => b[1] - a[1]).map(([c, n]) => `
+    <div class="donut-cell"><div class="name">${c}</div><div class="big">${n.toLocaleString()}</div><div class="sub">${(n/total*100).toFixed(1)}% of writers</div></div>
+  `).join("");
+
+  // Genre tilt
+  const tilt = {};
+  GROUPS.forEach(g => {
+    tilt[g.genre] = tilt[g.genre] || {};
+    Object.entries(g.countries).forEach(([c, n]) => tilt[g.genre][c] = (tilt[g.genre][c] || 0) + n);
+  });
+  const tiltSorted = Object.entries(tilt).sort((a, b) => Object.values(b[1]).reduce((s,n)=>s+n,0) - Object.values(a[1]).reduce((s,n)=>s+n,0));
+  $("#genreTilt").innerHTML = tiltSorted.map(([gen, counts]) => {
+    const tot = Object.values(counts).reduce((s, n) => s + n, 0);
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    const us = (counts["United States"] || 0) / tot;
+    const top5 = sorted.slice(0, 6).map(([c, n]) => `${c} ${Math.round(n/tot*100)}%`).join(" · ");
+    return `<div style="display:grid;grid-template-columns:200px 80px 1fr;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;align-items:center">
+      <div><span class="swatch" style="display:inline-block;width:10px;height:10px;background:${GENRE_COLORS[gen]||'#444'};border-radius:2px;margin-right:6px;vertical-align:middle"></span>${gen}</div>
+      <div style="color:var(--ink-dim)">US ${Math.round(us*100)}%</div>
+      <div style="color:var(--ink-mute)">${top5}</div>
+    </div>`;
+  }).join("");
+})();
+
+// Rivals
+(() => {
+  const tokens = s => new Set((s || "").toLowerCase().replace(/[^a-z ]/g," ").split(/\s+/).filter(x => x.length > 2 && !["the","and","for","with","into","one","off","out"].includes(x)));
+  function score(a, b) {
+    let s = 0;
+    if (a.genre === b.genre) s += 3;
+    if (a.objectTheme === b.objectTheme) s += 2;
+    if (a.actionTheme === b.actionTheme) s += 2;
+    const ta = tokens(a.action), tb = tokens(b.action);
+    for (const t of ta) if (tb.has(t)) s += 1;
+    const oa = tokens(a.object), ob = tokens(b.object);
+    for (const t of oa) if (ob.has(t)) s += 1;
+    return s;
+  }
+  const rivals = GROUPS.map(g => {
+    const others = GROUPS.filter(x => x.id !== g.id).map(x => ({g: x, s: score(g, x)})).sort((a, b) => b.s - a.s);
+    return {g, top: others.slice(0, 3)};
+  });
+  $("#rivals").innerHTML = rivals.map(({g, top}) => `
+    <div class="rival-card">
+      <div class="pivot"><span class="chip" style="cursor:pointer" data-id="${g.id}"><span class="gnum" style="background:${GENRE_COLORS[g.genre]||'#444'}">#${g.id}</span><span class="gtitle">${g.genre} · ${g.action} · ${g.object}</span></span></div>
+      <div class="rivals">${top.map(r => `
+        <div class="rival">
+          <span class="chip" data-id="${r.g.id}"><span class="gnum" style="background:${GENRE_COLORS[r.g.genre]||'#444'}">#${r.g.id}</span></span>
+          <span class="why">${r.g.genre} · ${r.g.action} · ${r.g.object}</span>
+          <span class="score">${r.s}</span>
+        </div>
+      `).join("")}</div>
+    </div>
+  `).join("");
+})();
+
+// Catalog
+(() => {
+  const genres = Array.from(new Set(GROUPS.map(g => g.genre))).sort();
+  $("#filterGenre").innerHTML += genres.map(g => `<option>${g}</option>`).join("");
+  const allCountries = new Set();
+  GROUPS.forEach(g => Object.keys(g.countries).forEach(c => allCountries.add(c)));
+  $("#filterCountry").innerHTML += Array.from(allCountries).sort().map(c => `<option>${c}</option>`).join("");
+
+  function render() {
+    const q = $("#search").value.trim().toLowerCase();
+    const gf = $("#filterGenre").value;
+    const cf = $("#filterCountry").value;
+    const filtered = GROUPS.filter(g => {
+      if (gf && g.genre !== gf) return false;
+      if (cf && !g.countries[cf]) return false;
+      if (q && !(`${g.genre} ${g.action} ${g.object}`).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    $("#catalogCount").textContent = `${filtered.length} of ${GROUPS.length} groups`;
+    $("#catalog").innerHTML = filtered.sort((a,b)=>a.id-b.id).map(g => {
+      const top = Object.entries(g.countries).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([c,n])=>`<span class="flag">${c} ${n}</span>`).join("");
+      return `<div class="card" data-id="${g.id}">
+        <div class="id">GROUP ${g.id}</div>
+        <div class="gen" style="background:${GENRE_COLORS[g.genre]||'#444'};color:#fff">${g.genre.replace(' and/or ',' / ')}</div>
+        <div class="ao"><span class="verb">${g.action}</span> · <span class="obj">${g.object}</span></div>
+        <div class="meta">${top}<span class="flag">${g.writers} writers</span></div>
+      </div>`;
+    }).join("");
+  }
+  $("#search").addEventListener("input", render);
+  $("#filterGenre").addEventListener("change", render);
+  $("#filterCountry").addEventListener("change", render);
+  render();
+})();
+
+// Modal
+function openModal(id) {
+  const g = groupsById[id]; if (!g) return;
+  const sorted = Object.entries(g.countries).sort((a,b)=>b[1]-a[1]);
+  const max = sorted[0][1];
+  const bars = sorted.map(([c,n])=>`<div class="bar"><div class="lbl">${c}</div><div class="track"><div class="fill" style="width:${(n/max*100).toFixed(0)}%"></div></div><div class="v">${n}</div></div>`).join("");
+  $("#modal").innerHTML = `
+    <span class="close" onclick="closeModal()">×</span>
+    <h3>Group ${g.id}</h3>
+    <div style="color:var(--ink-mute);font-size:13px;margin-bottom:14px"><span style="background:${GENRE_COLORS[g.genre]||'#444'};color:#fff;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600">${g.genre}</span></div>
+    <div class="row"><div class="k">Action</div><div><span style="color:var(--accent)">${g.action}</span></div></div>
+    <div class="row"><div class="k">Object</div><div><span style="color:var(--accent2)">${g.object}</span></div></div>
+    <div class="row"><div class="k">Object theme</div><div>${g.objectTheme}</div></div>
+    <div class="row"><div class="k">Action theme</div><div>${g.actionTheme}</div></div>
+    <div class="row"><div class="k">Writers</div><div>${g.writers}</div></div>
+    <div style="margin-top:16px;font-size:11px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.4px">Countries</div>
+    <div class="country-bars">${bars}</div>
+  `;
+  $("#modalBg").classList.add("open");
+}
+function closeModal() { $("#modalBg").classList.remove("open"); }
+window.closeModal = closeModal;
+$("#modalBg").addEventListener("click", e => { if (e.target.id === "modalBg") closeModal(); });
+document.addEventListener("click", e => {
+  const chip = e.target.closest(".chip, .card");
+  if (chip && chip.dataset.id) openModal(+chip.dataset.id);
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+</script>
+</body>
+</html>
