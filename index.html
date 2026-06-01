@@ -242,6 +242,7 @@
 
   <section class="panel-tab active" data-pane="rounds">
     <div class="section-note">Three rounds. Each round has a 48-hour writing window and a new prompt assignment. Only ~0.29% of writers reach the prize tier (10 winners out of 3,456 entrants). Past years' rules confirm round 2 swaps the action prompt for a <span style="color:var(--accent)">location</span> prompt, and the final round opens the genre.</div>
+    <div id="funnelSvgWrap" style="margin: 8px 0 24px;"></div>
     <div class="funnel" id="funnel"></div>
   </section>
 
@@ -361,6 +362,68 @@ const ROUNDS = [
   {n: 2, name: "2nd Round", dates: "Jul 17–19, 2026", writers: 860, groups: 22, perGroup: 39, advance: "Top 4 / group", advanceTo: 88, prompt: {Genre: "Assigned", Location: "Assigned", Object: "Assigned"}, note: "New random groups. Prompt format swaps Action for Location (per 2025 precedent)."},
   {n: 3, name: "Final Round", dates: "Sep 11–13, 2026", writers: 88, groups: 1, perGroup: 88, advance: "Top 10 ranked", advanceTo: 10, prompt: {Genre: "Open", Action: "Assigned", Object: "Assigned"}, note: "Single pool of 88. Genre is open. Top 10 take cash prizes (≈0.29% of original entrants)."},
 ];
+
+// Funnel SVG — proportional bars (sqrt scale to keep the 10-winner bar legible) with cut trapezoids between
+(() => {
+  const stages = [
+    {label: "1st Round entry",  count: 3456, sub: "May 29–31",  color: "#7aa6ff"},
+    {label: "Reached 2nd Round", count: 860,  sub: "Jul 17–19",  color: "#a8d99c"},
+    {label: "Reached Final",     count: 88,   sub: "Sep 11–13",  color: "#e7c069"},
+    {label: "Won prize money",   count: 10,   sub: "≈0.29%",     color: "#ffb347"},
+  ];
+  const W = 1080, MAX = 1000, padX = (W - MAX) / 2, barH = 64, gapH = 70;
+  const widthOf = c => Math.max(220, Math.sqrt(c / stages[0].count) * MAX);
+
+  const bars = stages.map((s, i) => ({
+    ...s,
+    w: widthOf(s.count),
+    y: i * (barH + gapH) + 10,
+  }));
+  const H = bars[bars.length-1].y + barH + 12;
+
+  const fmt = n => n.toLocaleString();
+  const parts = [];
+
+  // Gradients + filter defs
+  parts.push(`<defs>
+    ${bars.map((b, i) => `<linearGradient id="g${i}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${b.color}" stop-opacity="0.95"/><stop offset="1" stop-color="${b.color}" stop-opacity="0.55"/></linearGradient>`).join("")}
+    <linearGradient id="cut" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#9b3447" stop-opacity="0.18"/><stop offset="1" stop-color="#9b3447" stop-opacity="0.32"/></linearGradient>
+  </defs>`);
+
+  // Cut trapezoids between bars (drawn first so bars sit on top)
+  for (let i = 0; i < bars.length - 1; i++) {
+    const a = bars[i], b = bars[i+1];
+    const aLeft = (W - a.w) / 2, aRight = (W + a.w) / 2;
+    const bLeft = (W - b.w) / 2, bRight = (W + b.w) / 2;
+    const yTop = a.y + barH;
+    const yBot = b.y;
+    const cut = a.count - b.count;
+    const cutPct = ((cut / a.count) * 100).toFixed(1);
+    parts.push(`<path d="M${aLeft},${yTop} L${aRight},${yTop} L${bRight},${yBot} L${bLeft},${yBot} Z" fill="url(#cut)" stroke="#5a2e35" stroke-width="0.5"/>`);
+    parts.push(`<text x="${W/2}" y="${(yTop + yBot)/2 + 4}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#e08a99" font-weight="600">— ${fmt(cut)} eliminated (${cutPct}%) —</text>`);
+  }
+
+  // Bars
+  bars.forEach((b, i) => {
+    const x = (W - b.w) / 2;
+    parts.push(`<rect x="${x}" y="${b.y}" width="${b.w}" height="${barH}" rx="10" ry="10" fill="url(#g${i})" stroke="${b.color}" stroke-opacity="0.6" stroke-width="1"/>`);
+    // Big count
+    parts.push(`<text x="${W/2}" y="${b.y + barH/2 - 4}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${i===0?32:i===1?26:i===2?22:20}" font-weight="800" fill="#0e1117">${fmt(b.count)}</text>`);
+    // Sub-label
+    parts.push(`<text x="${W/2}" y="${b.y + barH/2 + 16}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#0e1117" opacity="0.75" font-weight="600">${b.label.toUpperCase()} · ${b.sub}</text>`);
+  });
+
+  // Side annotations (right side) showing "% of original"
+  bars.forEach((b, i) => {
+    const x = (W + b.w) / 2 + 14;
+    const pct = (b.count / stages[0].count * 100);
+    const pctStr = pct >= 1 ? pct.toFixed(0) + "%" : pct.toFixed(2) + "%";
+    parts.push(`<text x="${x}" y="${b.y + barH/2 + 4}" text-anchor="start" font-family="system-ui,sans-serif" font-size="11" fill="${b.color}" font-weight="700">${pctStr} of field</text>`);
+  });
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;max-width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px">${parts.join("")}</svg>`;
+  $("#funnelSvgWrap").innerHTML = svg;
+})();
 
 (() => {
   $("#funnel").innerHTML = ROUNDS.map((r, i) => {
