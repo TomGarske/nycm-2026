@@ -165,6 +165,33 @@
   .odds-table th{color:var(--ink-mute);text-transform:uppercase;font-size:11px;letter-spacing:0.4px;font-weight:600;text-align:left}
   .odds-table td.r{text-align:right}
 
+  /* Publishing filters */
+  .pub-filters{display:flex;gap:6px;margin:8px 0 12px;flex-wrap:wrap;align-items:center}
+  .pub-filters .lbl{color:var(--ink-mute);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;margin-right:4px}
+  .pub-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink-dim);cursor:pointer;transition:all .12s ease;user-select:none}
+  .pub-chip:hover{transform:translateY(-1px);border-color:#555;color:var(--ink)}
+  .pub-chip .count{background:var(--panel);color:var(--ink-mute);padding:1px 6px;border-radius:6px;font-size:10px;font-weight:700}
+  .pub-chip.active{border-width:2px;padding:4px 9px}
+  .pub-chip.active .count{background:rgba(0,0,0,0.35);color:#fff}
+  .pub-chip[data-bucket="ALL"].active{background:var(--accent);color:#0e1117;border-color:var(--accent);font-weight:700}
+  .pub-chip[data-bucket="TRAD_PUB"]{color:#a8d99c}
+  .pub-chip[data-bucket="TRAD_PUB"].active{background:#a8d99c;color:#0e1117;border-color:#a8d99c;font-weight:700}
+  .pub-chip[data-bucket="INDIE_PUB"]{color:#9bb1ff}
+  .pub-chip[data-bucket="INDIE_PUB"].active{background:#9bb1ff;color:#0e1117;border-color:#9bb1ff;font-weight:700}
+  .pub-chip[data-bucket="SHORT_PUB"]{color:#e7c069}
+  .pub-chip[data-bucket="SHORT_PUB"].active{background:#e7c069;color:#0e1117;border-color:#e7c069;font-weight:700}
+  .pub-chip[data-bucket="HOBBYIST"]{color:#c89a6c}
+  .pub-chip[data-bucket="HOBBYIST"].active{background:#c89a6c;color:#0e1117;border-color:#c89a6c;font-weight:700}
+  .pub-chip[data-bucket="UNCLEAR"]{color:#9da7b3}
+  .pub-chip[data-bucket="UNCLEAR"].active{background:#9da7b3;color:#0e1117;border-color:#9da7b3;font-weight:700}
+  .pub-chip[data-bucket="NONE"]{color:#e08a99}
+  .pub-chip[data-bucket="NONE"].active{background:#e08a99;color:#0e1117;border-color:#e08a99;font-weight:700}
+  .pub-status{color:var(--ink-mute);font-size:11px;margin-left:auto}
+  .flow-seg{cursor:pointer;transition:opacity .12s ease}
+  .flow-seg:hover{opacity:0.85}
+  .flow-seg.dim{opacity:0.25}
+  #pubTable tbody tr.hidden{display:none}
+
   /* Compete */
   .gar-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0;margin-bottom:20px;overflow:hidden}
   .gar-head{display:flex;align-items:baseline;gap:14px;padding:16px 20px;background:linear-gradient(180deg, var(--panel2), var(--panel));border-bottom:1px solid var(--line)}
@@ -279,10 +306,10 @@
   <section class="panel-tab" data-pane="publishing">
     <div class="section-note">A random sample of 50 writers (every 69th name from the alphabetized roster) — each looked up via web search for evidence of published work. Most contestants are not visibly published. ~12% are traditionally published, another ~6% have indie books on Amazon/Goodreads, ~12% have lit-mag bylines or screen/stage credits without books, and the remaining 70% are either unpublished, uncurated hobbyists, or have names too common to disambiguate from a quick search.</div>
     <div class="money-headline" id="pubHeadline" style="margin-bottom:18px"></div>
-    <h2>Sample distribution</h2>
+    <h2>Sample distribution <span class="small">click any segment or chip to filter</span></h2>
     <div class="flow"><div class="flow-bar" id="pubFlowBar"></div><div class="flow-legend" id="pubFlowLegend"></div></div>
-    <h2 style="margin-top:24px">All 50 sampled writers</h2>
-    <div class="section-note">Click any row for the source detail. Researched via parallel web search of name + city.</div>
+    <h2 style="margin-top:24px">Sampled writers</h2>
+    <div class="pub-filters" id="pubFilters"></div>
     <table class="prize-table" id="pubTable"></table>
   </section>
 
@@ -586,7 +613,7 @@ const CHARITIES = [
   }).join("");
 })();
 
-// Publishing status
+// Publishing status — dynamic filter by bucket
 (() => {
   const counts = {};
   for (const w of PUBLISHING_SAMPLE) counts[w.bucket] = (counts[w.bucket]||0) + 1;
@@ -604,21 +631,59 @@ const CHARITIES = [
   ];
   $("#pubHeadline").innerHTML = headline.map(s => `<div class="money-stat"><div class="lbl">${s.lbl}</div><div class="val" style="color:var(--ink)">${s.val}</div><div class="pct">${s.sub}</div></div>`).join("");
 
+  // Stacked bar with click-to-filter segments
   $("#pubFlowBar").innerHTML = order.map(b => {
     const c = counts[b]||0; if (!c) return "";
-    return `<div class="flow-seg" style="background:${PUB_BUCKETS[b].color};flex:${c};color:#0e1117;text-shadow:none;font-weight:700" title="${PUB_BUCKETS[b].desc}">${PUB_BUCKETS[b].label} · ${c} (${(c/n*100).toFixed(0)}%)</div>`;
+    return `<div class="flow-seg" data-bucket="${b}" style="background:${PUB_BUCKETS[b].color};flex:${c};color:#0e1117;text-shadow:none;font-weight:700" title="${PUB_BUCKETS[b].desc}">${PUB_BUCKETS[b].label} · ${c} (${(c/n*100).toFixed(0)}%)</div>`;
   }).join("");
   $("#pubFlowLegend").innerHTML = order.map(b => {
     const c = counts[b]||0; if (!c) return "";
     return `<span><span class="dot" style="background:${PUB_BUCKETS[b].color}"></span>${PUB_BUCKETS[b].label}: ${c}</span>`;
   }).join("");
 
-  const rows = PUBLISHING_SAMPLE.map(w => `<tr title="${w.note.replace(/"/g,'&quot;')}">
+  // Filter chips
+  const chipsHtml = [
+    `<span class="lbl">Filter</span>`,
+    `<span class="pub-chip active" data-bucket="ALL">All <span class="count">${n}</span></span>`,
+    ...order.map(b => {
+      const c = counts[b]||0; if (!c) return "";
+      return `<span class="pub-chip" data-bucket="${b}">${PUB_BUCKETS[b].label} <span class="count">${c}</span></span>`;
+    }),
+    `<span class="pub-status" id="pubStatus"></span>`
+  ].join("");
+  $("#pubFilters").innerHTML = chipsHtml;
+
+  // Table rows — sort by bucket priority so filters group cleanly
+  const bucketRank = {TRAD_PUB:0, INDIE_PUB:1, SHORT_PUB:2, HOBBYIST:3, UNCLEAR:4, NONE:5};
+  const sorted = [...PUBLISHING_SAMPLE].sort((a,b) => bucketRank[a.bucket]-bucketRank[b.bucket] || a.name.localeCompare(b.name));
+  const rows = sorted.map(w => `<tr data-bucket="${w.bucket}" title="${w.note.replace(/"/g,'&quot;')}">
     <td>${w.name}</td><td style="color:var(--ink-dim)">${w.loc}</td>
     <td><span style="background:${PUB_BUCKETS[w.bucket].color};color:#0e1117;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700">${PUB_BUCKETS[w.bucket].label}</span></td>
     <td style="color:var(--ink-dim);font-size:12px">${w.note}</td>
   </tr>`).join("");
   $("#pubTable").innerHTML = `<thead><tr><th>Writer</th><th>Location</th><th>Status</th><th>Note</th></tr></thead><tbody>${rows}</tbody>`;
+
+  // Filter behavior
+  const applyFilter = (bucket) => {
+    const chips = $$(".pub-chip");
+    chips.forEach(c => c.classList.toggle("active", c.dataset.bucket === bucket));
+    const segs = $$("#pubFlowBar .flow-seg");
+    segs.forEach(s => s.classList.toggle("dim", bucket !== "ALL" && s.dataset.bucket !== bucket));
+    const rows = $$("#pubTable tbody tr");
+    let visible = 0;
+    rows.forEach(r => {
+      const match = bucket === "ALL" || r.dataset.bucket === bucket;
+      r.classList.toggle("hidden", !match);
+      if (match) visible++;
+    });
+    const status = $("#pubStatus");
+    if (status) status.textContent = bucket === "ALL"
+      ? `Showing all ${n} writers`
+      : `Showing ${visible} of ${n} writers · ${PUB_BUCKETS[bucket].desc}`;
+  };
+  applyFilter("ALL");
+  $$(".pub-chip").forEach(chip => chip.addEventListener("click", () => applyFilter(chip.dataset.bucket)));
+  $$("#pubFlowBar .flow-seg").forEach(seg => seg.addEventListener("click", () => applyFilter(seg.dataset.bucket)));
 })();
 
 // Totals
