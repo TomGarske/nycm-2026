@@ -572,6 +572,8 @@ const CHARITIES = [
       </div>`;
     }).join("");
 
+    const selfPubBadge = g.selfPub ? `<div style="margin:14px 0;padding:12px;background:linear-gradient(180deg,#1a2614,var(--panel2));border:1px solid #3a5e2c;border-radius:8px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:13px;font-weight:700;color:#a8d99c">${g.name}'s own publishing</span><span class="bk" style="background:#a8d99c;color:#0e1117;padding:1px 8px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase">${g.selfPub === 'INDIE_PUB' ? 'Indie published' : g.selfPub === 'TRAD_PUB' ? 'Trad published' : g.selfPub}</span></div><div style="color:var(--ink-dim);font-size:12px;line-height:1.5">${g.selfPubNote}</div></div>` : '';
+
     return `<div class="gar-card">
       <div class="gar-head">
         <h3>${g.name}</h3>
@@ -584,6 +586,7 @@ const CHARITIES = [
           <div class="pp"><div class="k">Action</div><div class="v">${g.prompt.action}</div></div>
           <div class="pp"><div class="k">Object</div><div class="v">${g.prompt.object}</div></div>
         </div>
+        ${selfPubBadge}
         <div class="gar-summary">${g.summary}</div>
         ${tierBlocks.join("")}
         <div class="roster-grid">

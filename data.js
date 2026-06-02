@@ -406,7 +406,9 @@ const COMPETE = {
     loc: "Mesa, AZ",
     group: 84,
     prompt: {genre: "Romance", action: "Hiking", object: "A souvenir"},
-    summary: "ONE confirmed prior 500FC finalist (Acadia Hansen, #7 in 2025) plus three credentialed competitors. Acadia is the slot-1 contender. Of 10 advancing slots, ~4 are likely spoken for by veterans — Valerie's real fight is for slots 5–10.",
+    selfPub: "INDIE_PUB",
+    selfPubNote: "★ Valerie writes as VJ Garske — indie fantasy author with 4+ titles: The Moonstone Legacy series (Raven, Dragon, Griffin Moonstone) and Cowboys, Wizards & Liars. Active Amazon storefront, Goodreads author profile, Literary Titan award coverage. Comes in with real craft.",
+    summary: "Valerie is herself a credentialed indie fantasy author (VJ Garske, 4+ titles). ONE confirmed prior 500FC finalist (Acadia Hansen, #7 in 2025) + three other credentialed competitors. With Valerie's own pub history, this becomes a top-2 contest for the lead slots — Acadia vs. Valerie — with ~4 other slots fought over by Bellani/Coelho/Greco and the unknowns.",
     tier1: [
       {name: "Acadia Hansen", loc: "Athens, OH", bucket: "NYCM_VET", note: "★ CONFIRMED 2025 500FC #7 FINALIST (story 'Olive Oil'). Already cleared every round to the top tier last year. Plan around her."},
     ],
