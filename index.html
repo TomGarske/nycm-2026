@@ -261,7 +261,6 @@
     <div class="tab" data-tab="publishing">Publishing Status</div>
     <div class="tab" data-tab="compete">⚔️ Compete</div>
     <div class="tab" data-tab="finalists">Prior Finalists</div>
-    <div class="tab" data-tab="lanes">By Genre <span class="n">11</span></div>
     <div class="tab" data-tab="regions">Regions</div>
     <div class="tab" data-tab="catalog">All 86 Groups</div>
   </div>
@@ -312,10 +311,6 @@
     <table class="prize-table" id="pubTable"></table>
   </section>
 
-  <section class="panel-tab" data-pane="lanes" id="paneLanes">
-    <div class="section-note">All 86 groups laid out in lanes by genre. Each chip is a group — click for the full prompt and country breakdown. Genres with the most groups (and therefore the most writers) dominate the contest's center of gravity.</div>
-    <div class="lanes" id="lanes"></div>
-  </section>
 
   <section class="panel-tab" data-pane="regions">
     <div class="section-note">Where the 3,456 writers come from. The challenge is heavily US- and UK-skewed, but every group has international competitors.</div>
@@ -706,24 +701,6 @@ const chip = (g) => {
   const color = GENRE_COLORS[g.genre] || "#444";
   return `<span class="chip" data-id="${g.id}" title="${g.genre} · ${g.action} · ${g.object}"><span class="gnum" style="background:${color}">#${g.id}</span><span class="gtitle">${g.action} · ${g.object}</span></span>`;
 };
-
-// Genre lanes
-(() => {
-  const byGenre = {};
-  GROUPS.forEach(g => (byGenre[g.genre] = byGenre[g.genre] || []).push(g));
-  const sortedGenres = Object.entries(byGenre).sort((a, b) => b[1].length - a[1].length);
-  $("#lanes").innerHTML = sortedGenres.map(([gen, list]) => {
-    const writers = list.reduce((s, g) => s + g.writers, 0);
-    return `<div class="lane">
-      <div class="lane-head">
-        <span class="swatch" style="background:${GENRE_COLORS[gen] || '#444'}"></span>
-        <span class="name">${gen}</span>
-        <span class="count">${list.length} groups · ${writers.toLocaleString()} writers</span>
-      </div>
-      <div class="lane-body">${list.sort((a,b)=>a.id-b.id).map(chip).join("")}</div>
-    </div>`;
-  }).join("");
-})();
 
 // Regions: top countries
 (() => {
