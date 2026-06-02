@@ -242,6 +242,77 @@
   .fin-table tr.match td:nth-child(2)::after{content:" ◀ in Group 84"; color:var(--accent);font-weight:600;font-size:11px}
   .fin-table td a{color:var(--ink-dim);text-decoration:none}
   .fin-table td a:hover{color:var(--accent2);text-decoration:underline}
+
+  /* Grade pills */
+  .cds-grade{display:inline-block;width:24px;height:20px;line-height:20px;text-align:center;border-radius:4px;font-weight:800;font-size:11px;color:#0e1117;letter-spacing:0;vertical-align:middle}
+  .cds-grade.S{background:#ff7a8a}
+  .cds-grade.A{background:#e7c069}
+  .cds-grade.B{background:#9bb1ff}
+  .cds-grade.C{background:#a8d99c}
+  .cds-grade.D{background:#6b7480;color:#0e1117}
+
+  /* Catalog table */
+  .cat-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .cat-table th{background:var(--panel2);color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.4px;font-size:10px;text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-weight:700;position:sticky;top:0;cursor:pointer;user-select:none;white-space:nowrap}
+  .cat-table th:hover{color:var(--ink)}
+  .cat-table th .sort-ind{color:var(--ink-mute);font-size:9px;margin-left:2px}
+  .cat-table td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+  .cat-table tr:hover{background:var(--panel2)}
+  .cat-table .rank{color:var(--ink-mute);font-weight:700;text-align:center}
+  .cat-table .group{font-weight:700;color:var(--ink)}
+  .cat-table .group .garske-pill{background:var(--accent);color:#0e1117;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-left:4px;text-transform:uppercase;letter-spacing:0.4px}
+  .cat-table .genre-cell{font-size:11px}
+  .cat-table .genre-cell .gc-swatch{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle}
+  .cat-table .prompt{color:var(--ink-dim);font-size:11px;line-height:1.4;max-width:280px}
+  .cat-table .prompt .a{color:var(--accent)}
+  .cat-table .prompt .o{color:var(--accent2)}
+  .cat-table .bcount{text-align:center;color:var(--ink-dim);font-weight:600}
+  .cat-table .bcount.has{color:var(--ink)}
+  .cat-table .bcount.fin{color:#ff7a8a;font-weight:800}
+  .cat-table .bcount.vet{color:#ff7a8a;font-weight:700}
+  .cat-table .bcount.trad{color:#a8d99c}
+  .cat-table .bcount.indie{color:#9bb1ff}
+  .cat-table .bcount.short{color:#e7c069}
+  .cat-table .score{text-align:right;font-weight:800;color:var(--ink);padding-right:12px}
+  .cat-table tr.row-garske{background:linear-gradient(90deg,#1a2614,transparent 40%)}
+  .cat-table .flags{color:var(--ink-mute);font-size:11px;line-height:1.5;max-width:380px}
+  .cat-table .flags span.flag-line{display:block}
+
+  /* Bracket */
+  .brack-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:18px}
+  .brack-controls label{display:inline-flex;align-items:center;gap:8px;color:var(--ink-mute);font-size:12px;text-transform:uppercase;letter-spacing:0.4px;font-weight:600}
+  .brack-controls select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:6px 10px;border-radius:6px;font-size:13px;min-width:280px}
+  .brack-btn{background:var(--accent);color:#0e1117;border:0;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px}
+  .brack-btn:hover{filter:brightness(1.1)}
+  .brack-btn.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  .brack-btn:disabled{opacity:0.5;cursor:not-allowed}
+  .brack-phase{margin-left:auto;color:var(--ink-dim);font-size:12px;font-weight:600}
+
+  .brack-group{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+  .brack-group-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .brack-group-head h3{margin:0;font-size:16px}
+  .brack-group-head .who{color:var(--accent);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px}
+  .brack-group-head .pp{color:var(--ink-dim);font-size:12px}
+
+  .brack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px}
+  .brack-cell{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:11px;position:relative;transition:opacity .5s ease, filter .5s ease, transform .35s ease, border-color .35s ease, background .35s ease}
+  .brack-cell .nm{color:var(--ink);font-weight:600;display:block;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .brack-cell .bk{font-size:9px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.3px;margin-top:2px;display:block}
+  .brack-cell.b-NYCM_VET  {border-color:#5a2e35;background:linear-gradient(180deg,#2a1c20,var(--panel2))}
+  .brack-cell.b-TRAD_PUB  {border-color:#3a5e2c;background:linear-gradient(180deg,#1a2614,var(--panel2))}
+  .brack-cell.b-INDIE_PUB {border-color:#2f3d5c;background:linear-gradient(180deg,#1a2236,var(--panel2))}
+  .brack-cell.b-SHORT_PUB {border-color:#5e4b25;background:linear-gradient(180deg,#2a2316,var(--panel2))}
+  .brack-cell.self{outline:2px solid var(--accent);outline-offset:2px}
+  .brack-cell.self .nm::before{content:"⭐ "}
+  .brack-cell.cut{opacity:0.2;filter:grayscale(1);transform:scale(0.92)}
+  .brack-cell.advanced{box-shadow:0 0 0 2px rgba(255,179,71,0.5);transform:scale(1.04)}
+  .brack-cell .pulse{position:absolute;inset:-2px;border-radius:8px;border:2px solid var(--accent);opacity:0;animation:bp 1.2s ease-out 1}
+  @keyframes bp { 0%{opacity:.9} 100%{opacity:0;transform:scale(1.4)} }
+  .brack-cell .rank-pill{position:absolute;top:-6px;right:-6px;background:var(--accent);color:#0e1117;width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;font-size:10px;font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+
+  .brack-summary{margin-top:10px;padding:8px 10px;font-size:12px;color:var(--ink-dim);background:var(--panel2);border-radius:6px}
+  .brack-summary .ok{color:#a8d99c;font-weight:700}
+  .brack-summary .bad{color:#e08a99;font-weight:700}
 </style>
 </head>
 <body>
@@ -261,6 +332,7 @@
     <div class="tab" data-tab="publishing">Publishing Status</div>
     <div class="tab" data-tab="compete">⚔️ Compete</div>
     <div class="tab" data-tab="finalists">Prior Finalists</div>
+    <div class="tab" data-tab="bracket">Bracket</div>
     <div class="tab" data-tab="catalog">All 86 Groups</div>
   </div>
 
@@ -312,15 +384,64 @@
   </section>
 
 
+  <section class="panel-tab" data-pane="bracket">
+    <div class="section-note">Animated elimination of a 40-writer round-1 group. Writers are ranked by a heuristic score (publishing-tier weight + small random factor); the top 10 advance. Re-roll to see how outcomes shift with luck. Default view shows all three Garske groups side-by-side; pick a single group from the dropdown for a closer look.</div>
+
+    <div class="brack-controls">
+      <label>Group:
+        <select id="brackPick">
+          <option value="ALL">All 3 Garske groups</option>
+          <option value="56" selected>G56 — Tom Garske (Horror)</option>
+          <option value="53">G53 — Benton Garske (Action/Adventure)</option>
+          <option value="84">G84 — Valerie Garske (Romance)</option>
+          <option disabled>──────────</option>
+        </select>
+      </label>
+      <button id="brackRun" class="brack-btn">▶ Run elimination</button>
+      <button id="brackReroll" class="brack-btn ghost">↻ Re-roll</button>
+      <span id="brackPhase" class="brack-phase">Round 1 · 40 writers · top 10 advance</span>
+    </div>
+
+    <div id="brackBoard"></div>
+  </section>
+
   <section class="panel-tab" data-pane="catalog">
-    <div class="section-note">All 86 groups, stack-ranked by competitiveness. Score = +10 per prior 500FC finalist (2023-2025) found in this year's roster, +5 per NYCM medalist, +3 per traditionally-published author, +2 per indie author, +1 per short-form publisher. Most groups score 0 (no known threats); they'll get rescored as the full 3,456-writer publishing sweep completes. Garske groups are highlighted.</div>
+    <div class="section-note">All 86 groups, graded by <strong>Competitive Density Score (CDS)</strong> — how many traceable threats each group has, weighted by tier.</div>
+
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:18px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <h4 style="margin:0 0 8px;font-size:13px;color:var(--accent);letter-spacing:0.2px">CDS scoring rubric</h4>
+          <table style="font-size:12px;color:var(--ink-dim);width:100%">
+            <tr><td style="padding:3px 0"><strong style="color:#ff7a8a">+10</strong></td><td>per prior 500FC finalist (2023–2025 top-10 / HM) returning in 2026</td></tr>
+            <tr><td><strong style="color:#ff7a8a">+5</strong></td><td>per NYCM vet (prior ranking in any other NYCM challenge)</td></tr>
+            <tr><td><strong style="color:#a8d99c">+3</strong></td><td>per traditionally-published author (named press, multiple titles)</td></tr>
+            <tr><td><strong style="color:#9bb1ff">+2</strong></td><td>per indie / self-published author (Amazon, Goodreads)</td></tr>
+            <tr><td><strong style="color:#e7c069">+1</strong></td><td>per short-form publisher (lit-mag bylines, contest wins)</td></tr>
+            <tr><td>0</td><td>hobbyists, unclear names, no findings (most of the field)</td></tr>
+          </table>
+        </div>
+        <div>
+          <h4 style="margin:0 0 8px;font-size:13px;color:var(--accent);letter-spacing:0.2px">Grade bands</h4>
+          <table style="font-size:12px;color:var(--ink-dim);width:100%">
+            <tr><td style="padding:3px 0"><span class="cds-grade S">S</span></td><td>Brutal · 30+ CDS (multiple finalists or stacked pub credits)</td></tr>
+            <tr><td><span class="cds-grade A">A</span></td><td>Tough · 20–29 CDS (1 finalist + heavy pub presence, or no finalist + very deep field)</td></tr>
+            <tr><td><span class="cds-grade B">B</span></td><td>Moderate · 10–19 CDS (a few credentialed writers, no dominant figure)</td></tr>
+            <tr><td><span class="cds-grade C">C</span></td><td>Light · 5–9 CDS (a couple indie/short pubs)</td></tr>
+            <tr><td><span class="cds-grade D">D</span></td><td>Soft · 0–4 CDS (no traceable threats)</td></tr>
+          </table>
+          <div style="color:var(--ink-mute);font-size:11px;margin-top:8px;line-height:1.5"><strong>Density caveat:</strong> All groups have ~40 writers competing for 10 advancing slots. A higher CDS means more credentialed writers fighting for the same 10 slots — a steeper effective bar.</div>
+        </div>
+      </div>
+    </div>
+
     <div class="filterbar">
-      <input id="search" placeholder="Search prompt or object…">
+      <input id="search" placeholder="Search prompt, object, or flag…">
       <select id="filterGenre"><option value="">All genres</option></select>
-      <select id="filterCountry"><option value="">All countries</option></select>
+      <select id="filterGrade"><option value="">All grades</option><option>S</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
       <span class="sub" id="catalogCount"></span>
     </div>
-    <div class="grid" id="catalog"></div>
+    <div id="catalogTableWrap"></div>
   </section>
 
   <footer>Static snapshot · generated <span id="ts"></span> · data from public Airtable embed</footer>
@@ -720,52 +841,266 @@ const chip = (g) => {
   return `<span class="chip" data-id="${g.id}" title="${g.genre} · ${g.action} · ${g.object}"><span class="gnum" style="background:${color}">#${g.id}</span><span class="gtitle">${g.action} · ${g.object}</span></span>`;
 };
 
-// Catalog
+// Bracket — animated round-1 elimination
+(() => {
+  // Populate dropdown with all groups, ranked by CDS
+  const sel = $("#brackPick");
+  const sorted = Object.keys(GROUP_SCORES).map(Number).sort((a, b) => (GROUP_SCORES[b].score - GROUP_SCORES[a].score) || (a - b));
+  sorted.forEach(gid => {
+    const sc = GROUP_SCORES[gid];
+    const grade = sc.score >= 30 ? 'S' : sc.score >= 20 ? 'A' : sc.score >= 10 ? 'B' : sc.score >= 5 ? 'C' : 'D';
+    const opt = document.createElement('option');
+    opt.value = String(gid);
+    opt.textContent = `G${gid} · ${grade} · ${sc.score}pt`;
+    sel.appendChild(opt);
+  });
+
+  // Heuristic ranking score per writer (deterministic part + per-roll random)
+  const TIER_WEIGHT = {NYCM_VET: 50, TRAD_PUB: 30, INDIE_PUB: 18, SHORT_PUB: 10, HOBBYIST: 2, UNCLEAR: 1, NONE: 0};
+  const PRIOR_FIN = new Set(PRIOR_FINALISTS.map(f => f.name.toLowerCase().replace(/[.,]/g,'').replace(/\s+/g,' ').trim()));
+
+  let seed = 1; // controllable PRNG so re-roll is reproducible per click
+  function nextSeed() { seed = (seed * 9301 + 49297) % 233280; return seed; }
+  function rng() { return nextSeed() / 233280; }
+
+  function writersInGroup(gid) {
+    return WRITER_PUBS.filter(w => String(w.g) === String(gid));
+  }
+  function rankScore(w) {
+    const k = w.n.toLowerCase().replace(/[.,]/g,'').replace(/\s+/g,' ').trim();
+    let s = TIER_WEIGHT[w.b] || 0;
+    if (PRIOR_FIN.has(k)) s += 80;
+    s += rng() * 30; // luck factor (~30% of NYCM_VET strength)
+    return s;
+  }
+
+  function renderGroup(gid, container) {
+    const writers = writersInGroup(gid);
+    if (!writers.length) return;
+    // initial ranking (not yet applied)
+    const sc = GROUP_SCORES[gid] || {score:0};
+    const meta = GROUPS.find(g => g.id == gid);
+    const garske = GARSKE_GROUPS[gid];
+
+    const head = `<div class="brack-group-head">
+      <h3>Group ${gid}</h3>
+      ${garske ? `<span class="who">${garske} Garske</span>` : ''}
+      <span class="pp">${meta.genre.replace(' and/or ','/')} · ${meta.action} · ${meta.object}</span>
+      <span style="margin-left:auto;color:var(--ink-mute);font-size:11px">CDS ${sc.score}pt</span>
+    </div>`;
+
+    const cells = writers.map((w, i) => {
+      const isSelf = /garske/i.test(w.n);
+      return `<div class="brack-cell b-${w.b}${isSelf?' self':''}" data-name="${w.n.replace(/"/g,'&quot;')}" data-idx="${i}">
+        <span class="nm">${w.n}</span>
+        <span class="bk">${w.b === 'NONE' ? '—' : w.b.replace('_PUB','').toLowerCase()}</span>
+      </div>`;
+    }).join('');
+
+    container.insertAdjacentHTML('beforeend', `<div class="brack-group" data-gid="${gid}">
+      ${head}
+      <div class="brack-grid">${cells}</div>
+      <div class="brack-summary" id="brack-sum-${gid}">Ready. Click ▶ Run elimination.</div>
+    </div>`);
+  }
+
+  async function runGroup(gid) {
+    const groupEl = document.querySelector(`.brack-group[data-gid="${gid}"]`);
+    if (!groupEl) return;
+    const cells = Array.from(groupEl.querySelectorAll('.brack-cell'));
+    const writers = writersInGroup(gid);
+
+    // Reset
+    cells.forEach(c => c.classList.remove('cut','advanced'));
+    cells.forEach(c => c.querySelectorAll('.rank-pill,.pulse').forEach(n => n.remove()));
+
+    // Rank
+    const ranked = writers.map((w, idx) => ({w, idx, s: rankScore(w)})).sort((a, b) => b.s - a.s);
+
+    // Animate: cut bottom 30 one at a time, slow at first
+    const cutOrder = ranked.slice(10).map(r => r.idx); // 30 cuts, in score order (worst first)
+    cutOrder.reverse(); // start cutting weakest first? Actually start with weakest already sorted last. Reverse → cut weakest first
+    // Actually we want to cut weakest first → cutOrder is from rank 10 to rank 39 (best of cut to worst of cut). Reverse to start at rank 39 (truly weakest).
+
+    for (let i = 0; i < cutOrder.length; i++) {
+      const delay = i < 8 ? 100 : i < 18 ? 60 : 35;
+      await new Promise(r => setTimeout(r, delay));
+      cells[cutOrder[i]].classList.add('cut');
+    }
+
+    // Highlight advancers with rank pills
+    await new Promise(r => setTimeout(r, 250));
+    ranked.slice(0, 10).forEach((r, advRank) => {
+      const cell = cells[r.idx];
+      cell.classList.add('advanced');
+      const pill = document.createElement('span');
+      pill.className = 'rank-pill';
+      pill.textContent = (advRank + 1);
+      cell.appendChild(pill);
+      const pulse = document.createElement('span');
+      pulse.className = 'pulse';
+      cell.appendChild(pulse);
+    });
+
+    // Summary
+    const advanced = ranked.slice(0, 10);
+    const cut = ranked.slice(10);
+    const selfRow = ranked.findIndex(r => /garske/i.test(r.w.n));
+    const garske = GARSKE_GROUPS[gid];
+    let msg = `${advanced.length} advanced · ${cut.length} cut.`;
+    if (garske) {
+      if (selfRow < 10) msg += ` <span class="ok">★ ${garske} Garske advances (rank ${selfRow + 1}/10)</span>`;
+      else msg += ` <span class="bad">★ ${garske} Garske eliminated (rank ${selfRow + 1}/40)</span>`;
+    }
+    const topNames = advanced.slice(0, 5).map((r, i) => `#${i+1} ${r.w.n}`).join(' · ');
+    msg += `<div style="margin-top:4px;font-size:11px;color:var(--ink-mute)">Top 5: ${topNames}</div>`;
+    document.getElementById(`brack-sum-${gid}`).innerHTML = msg;
+  }
+
+  function rebuild() {
+    const v = sel.value;
+    const board = $("#brackBoard");
+    board.innerHTML = '';
+    if (v === 'ALL') {
+      [56, 53, 84].forEach(g => renderGroup(g, board));
+    } else {
+      renderGroup(parseInt(v, 10), board);
+    }
+  }
+
+  async function runAll() {
+    const v = sel.value;
+    const gids = v === 'ALL' ? [56, 53, 84] : [parseInt(v, 10)];
+    $("#brackRun").disabled = true;
+    $("#brackReroll").disabled = true;
+    for (const g of gids) {
+      await runGroup(g);
+    }
+    $("#brackRun").disabled = false;
+    $("#brackReroll").disabled = false;
+    $("#brackPhase").textContent = `Round 1 complete · ${gids.length === 1 ? '10 of 40 advance' : `${gids.length} groups · 10 of 40 advance each`}`;
+  }
+
+  sel.addEventListener('change', () => { rebuild(); $("#brackPhase").textContent = 'Round 1 · 40 writers · top 10 advance'; });
+  $("#brackRun").addEventListener('click', runAll);
+  $("#brackReroll").addEventListener('click', () => { seed = (seed + 13) % 233280 + 1; rebuild(); runAll(); });
+  rebuild();
+})();
+
+// Catalog — graded table view
 (() => {
   const genres = Array.from(new Set(GROUPS.map(g => g.genre))).sort();
   $("#filterGenre").innerHTML += genres.map(g => `<option>${g}</option>`).join("");
-  const allCountries = new Set();
-  GROUPS.forEach(g => Object.keys(g.countries).forEach(c => allCountries.add(c)));
-  $("#filterCountry").innerHTML += Array.from(allCountries).sort().map(c => `<option>${c}</option>`).join("");
+
+  const gradeFor = (score) => score >= 30 ? 'S' : score >= 20 ? 'A' : score >= 10 ? 'B' : score >= 5 ? 'C' : 'D';
+
+  // Build a single dataset
+  const rows = GROUPS.map(g => {
+    const sc = GROUP_SCORES[g.id] || {score: 0, finalists: 0, vet: 0, trad: 0, indie: 0, short: 0, flags: []};
+    return {
+      g,
+      score: sc.score,
+      grade: gradeFor(sc.score),
+      finalists: sc.finalists,
+      vet: sc.vet,
+      trad: sc.trad,
+      indie: sc.indie,
+      short: sc.short,
+      flags: sc.flags,
+      garske: GARSKE_GROUPS[g.id],
+    };
+  });
+
+  let sortKey = 'score', sortDir = -1;
+  const SORTS = {
+    rank: r => r.score, score: r => r.score, grade: r => -['S','A','B','C','D'].indexOf(r.grade),
+    group: r => r.g.id, genre: r => r.g.genre,
+    finalists: r => r.finalists, vet: r => r.vet, trad: r => r.trad, indie: r => r.indie, short: r => r.short,
+  };
 
   function render() {
     const q = $("#search").value.trim().toLowerCase();
     const gf = $("#filterGenre").value;
-    const cf = $("#filterCountry").value;
-    const filtered = GROUPS.filter(g => {
-      if (gf && g.genre !== gf) return false;
-      if (cf && !g.countries[cf]) return false;
-      if (q && !(`${g.genre} ${g.action} ${g.object}`).toLowerCase().includes(q)) return false;
+    const grf = $("#filterGrade").value;
+    let filtered = rows.filter(r => {
+      if (gf && r.g.genre !== gf) return false;
+      if (grf && r.grade !== grf) return false;
+      if (q) {
+        const hay = `${r.g.genre} ${r.g.action} ${r.g.object} ${r.flags.join(' ')}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
       return true;
     });
-    // Stack-rank by competitiveness score (desc), break ties by group id (asc)
-    filtered.sort((a, b) => {
-      const sa = (GROUP_SCORES[a.id] || {score: 0}).score;
-      const sb = (GROUP_SCORES[b.id] || {score: 0}).score;
-      return (sb - sa) || (a.id - b.id);
-    });
-    const scoredCount = filtered.filter(g => (GROUP_SCORES[g.id] || {score:0}).score > 0).length;
-    $("#catalogCount").textContent = `${filtered.length} of ${GROUPS.length} groups · ${scoredCount} have known threats`;
-    $("#catalog").innerHTML = filtered.map((g, i) => {
-      const top = Object.entries(g.countries).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([c,n])=>`<span class="flag">${c} ${n}</span>`).join("");
-      const sc = GROUP_SCORES[g.id];
-      const garske = GARSKE_GROUPS[g.id];
-      const score = sc ? sc.score : 0;
-      const rankBadge = score > 0 ? `<span style="background:${score>=20?'#9b3447':score>=10?'#705a30':'#3a5e2c'};color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.4px;margin-left:6px">${score}pt · #${i+1}</span>` : '';
-      const garskeBadge = garske ? `<span style="background:#ffb347;color:#0e1117;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.4px;margin-left:6px">${garske.toUpperCase()}</span>` : '';
-      const flags = sc && sc.flags.length ? `<div style="font-size:11px;color:var(--ink-dim);padding:6px 0 0;line-height:1.5">${sc.flags.map(f=>'• '+f).join('<br>')}</div>` : '';
-      return `<div class="card" data-id="${g.id}" style="${score>=20?'border-color:#5a2e35':score>=10?'border-color:#5e4b25':score>0?'border-color:#3a5e2c':''}">
-        <div class="id">GROUP ${g.id}${rankBadge}${garskeBadge}</div>
-        <div class="gen" style="background:${GENRE_COLORS[g.genre]||'#444'};color:#fff">${g.genre.replace(' and/or ',' / ')}</div>
-        <div class="ao"><span class="verb">${g.action}</span> · <span class="obj">${g.object}</span></div>
-        <div class="meta">${top}<span class="flag">${g.writers} writers</span></div>
-        ${flags}
-      </div>`;
-    }).join("");
+
+    // Always rank by score first to preserve "rank" column, then re-sort by user's choice
+    filtered.sort((a,b) => (b.score - a.score) || (a.g.id - b.g.id));
+    const ranked = new Map(filtered.map((r,i) => [r.g.id, i+1]));
+    if (sortKey !== 'rank' && sortKey !== 'score') {
+      const fn = SORTS[sortKey];
+      filtered.sort((a,b) => {
+        const va = fn(a), vb = fn(b);
+        if (va === vb) return a.g.id - b.g.id;
+        return sortDir > 0 ? (va < vb ? -1 : 1) : (va > vb ? -1 : 1);
+      });
+    } else if (sortKey === 'score' && sortDir > 0) {
+      filtered.reverse();
+    }
+
+    $("#catalogCount").textContent = `${filtered.length} of ${GROUPS.length} groups`;
+
+    const sIcon = (k) => sortKey === k ? (sortDir > 0 ? '↑' : '↓') : '';
+    const cols = [
+      {k:'rank',  l:'Rank'},
+      {k:'grade', l:'Grade'},
+      {k:'group', l:'Group'},
+      {k:'genre', l:'Genre'},
+      {k:'',      l:'Prompt'},
+      {k:'finalists', l:'Fin'},
+      {k:'vet',   l:'Vet'},
+      {k:'trad',  l:'Trad'},
+      {k:'indie', l:'Indie'},
+      {k:'short', l:'Short'},
+      {k:'score', l:'CDS'},
+      {k:'',      l:'Top flags'},
+    ];
+    const ths = cols.map(c => c.k
+      ? `<th data-sort="${c.k}">${c.l} <span class="sort-ind">${sIcon(c.k)}</span></th>`
+      : `<th>${c.l}</th>`).join('');
+
+    const trs = filtered.map(r => {
+      const rank = ranked.get(r.g.id);
+      const garske = r.garske;
+      const garskePill = garske ? `<span class="garske-pill">${garske}</span>` : '';
+      const swatch = `<span class="gc-swatch" style="background:${GENRE_COLORS[r.g.genre]||'#444'}"></span>`;
+      const cellBcount = (v, cls) => `<td class="bcount ${cls} ${v?'has':''}">${v||'—'}</td>`;
+      const flags = r.flags.slice(0,3).map(f => `<span class="flag-line">• ${f}</span>`).join('');
+      return `<tr class="${garske?'row-garske':''}">
+        <td class="rank">#${rank}</td>
+        <td><span class="cds-grade ${r.grade}">${r.grade}</span></td>
+        <td class="group">G${r.g.id}${garskePill}</td>
+        <td class="genre-cell">${swatch}${r.g.genre.replace(' and/or ',' / ')}</td>
+        <td class="prompt"><span class="a">${r.g.action}</span> · <span class="o">${r.g.object}</span></td>
+        ${cellBcount(r.finalists, 'fin')}
+        ${cellBcount(r.vet, 'vet')}
+        ${cellBcount(r.trad, 'trad')}
+        ${cellBcount(r.indie, 'indie')}
+        ${cellBcount(r.short, 'short')}
+        <td class="score">${r.score}</td>
+        <td class="flags">${flags || '<em style="color:var(--ink-mute)">no traceable threats</em>'}</td>
+      </tr>`;
+    }).join('');
+
+    $("#catalogTableWrap").innerHTML = `<table class="cat-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+    $$('#catalogTableWrap th[data-sort]').forEach(th => th.addEventListener('click', () => {
+      const k = th.dataset.sort;
+      if (sortKey === k) sortDir *= -1;
+      else { sortKey = k; sortDir = (k === 'group' || k === 'genre') ? 1 : -1; }
+      render();
+    }));
   }
   $("#search").addEventListener("input", render);
   $("#filterGenre").addEventListener("change", render);
-  $("#filterCountry").addEventListener("change", render);
+  $("#filterGrade").addEventListener("change", render);
   render();
 })();
 
