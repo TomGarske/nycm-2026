@@ -301,13 +301,14 @@
   </section>
 
   <section class="panel-tab" data-pane="publishing">
-    <div class="section-note">A random sample of 50 writers (every 69th name from the alphabetized roster) — each looked up via web search for evidence of published work. Most contestants are not visibly published. ~12% are traditionally published, another ~6% have indie books on Amazon/Goodreads, ~12% have lit-mag bylines or screen/stage credits without books, and the remaining 70% are either unpublished, uncurated hobbyists, or have names too common to disambiguate from a quick search.</div>
+    <div class="section-note">Full sweep of all <strong>3,456</strong> writers — each looked up via web search by one of 50 parallel research agents (5M tokens, 22 min). About 16% of the field has some traceable publishing presence; the rest are either unpublished, common-name collisions, or invisible online. The table defaults to credentialed writers (NYCM vet + trad + indie + short-form) — click any chip or bar segment to drill into a bucket.</div>
     <div class="money-headline" id="pubHeadline" style="margin-bottom:18px"></div>
-    <h2>Sample distribution <span class="small">click any segment or chip to filter</span></h2>
+    <h2>Full-field distribution <span class="small">click any segment or chip to filter</span></h2>
     <div class="flow"><div class="flow-bar" id="pubFlowBar"></div><div class="flow-legend" id="pubFlowLegend"></div></div>
-    <h2 style="margin-top:24px">Sampled writers</h2>
+    <h2 style="margin-top:24px">Writers <span class="small" id="pubTableSubtitle"></span></h2>
     <div class="pub-filters" id="pubFilters"></div>
     <table class="prize-table" id="pubTable"></table>
+    <div id="pubMore" style="text-align:center;padding:14px;color:var(--ink-mute);font-size:12px"></div>
   </section>
 
 
@@ -330,6 +331,7 @@
 </div>
 
 <script src="data.js"></script>
+<script src="writers.js"></script>
 <script>
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -580,75 +582,111 @@ const CHARITIES = [
   }).join("");
 })();
 
-// Publishing status — dynamic filter by bucket
+// Publishing status — full 3,456-writer sweep, filterable, paginated
 (() => {
-  const counts = {};
-  for (const w of PUBLISHING_SAMPLE) counts[w.bucket] = (counts[w.bucket]||0) + 1;
-  const order = ["TRAD_PUB","INDIE_PUB","SHORT_PUB","HOBBYIST","UNCLEAR","NONE"];
-  const n = PUBLISHING_SAMPLE.length;
-  const publishedAny = (counts.TRAD_PUB||0) + (counts.INDIE_PUB||0) + (counts.SHORT_PUB||0);
-  const estTradFull = Math.round((counts.TRAD_PUB||0)/n * TOTAL_WRITERS);
-  const estAnyFull = Math.round(publishedAny/n * TOTAL_WRITERS);
-  const headline = [
-    {lbl: "Sample size", val: n, sub: "of 3,456 (~1.4%)"},
-    {lbl: "Trad. published", val: (counts.TRAD_PUB||0), sub: ((counts.TRAD_PUB||0)/n*100).toFixed(0)+"% · ~"+estTradFull.toLocaleString()+" of 3,456"},
-    {lbl: "Any publication", val: publishedAny, sub: (publishedAny/n*100).toFixed(0)+"% · ~"+estAnyFull.toLocaleString()+" of 3,456"},
-    {lbl: "No findings", val: (counts.NONE||0), sub: ((counts.NONE||0)/n*100).toFixed(0)+"% · invisible online"},
-    {lbl: "Unclear", val: (counts.UNCLEAR||0), sub: ((counts.UNCLEAR||0)/n*100).toFixed(0)+"% · common-name collisions"},
-  ];
-  $("#pubHeadline").innerHTML = headline.map(s => `<div class="money-stat"><div class="lbl">${s.lbl}</div><div class="val" style="color:var(--ink)">${s.val}</div><div class="pct">${s.sub}</div></div>`).join("");
+  if (typeof WRITER_PUBS === 'undefined') { $("#pubTable").innerHTML = "<tbody><tr><td>WRITER_PUBS not loaded</td></tr></tbody>"; return; }
 
-  // Stacked bar with click-to-filter segments
+  const order = ["NYCM_VET","TRAD_PUB","INDIE_PUB","SHORT_PUB","HOBBYIST","UNCLEAR","NONE"];
+  const BUCKETS = {
+    NYCM_VET:  {label: "NYCM veteran", color: "#ff7a8a", desc: "Verified prior NYC Midnight ranking in any challenge (500FC, Short Story, Flash Fiction, Microfiction, Screenwriting, Rhyming)."},
+    TRAD_PUB:  {label: "Traditionally published", color: "#a8d99c", desc: "Books with named publishers, agents, or multiple titles. Picture books, novels, screen credits."},
+    INDIE_PUB: {label: "Indie / self-published", color: "#9bb1ff", desc: "Self-pub or hybrid press books on Amazon / Goodreads. Often a single title."},
+    SHORT_PUB: {label: "Short-form published", color: "#e7c069", desc: "Lit-mag bylines, contest wins, dramaturgy, criticism — no books."},
+    HOBBYIST:  {label: "Hobbyist / amateur", color: "#c89a6c", desc: "Stage32, Substack, blog, Wattpad — public but uncurated."},
+    UNCLEAR:   {label: "Unclear (common name)", color: "#9da7b3", desc: "Name too common to disambiguate from web search alone."},
+    NONE:      {label: "No findings", color: "#e08a99", desc: "No writing-related results online — likely unpublished entrants."},
+  };
+
+  const counts = {};
+  for (const w of WRITER_PUBS) counts[w.b] = (counts[w.b]||0) + 1;
+  const n = WRITER_PUBS.length;
+  const credentialed = (counts.NYCM_VET||0) + (counts.TRAD_PUB||0) + (counts.INDIE_PUB||0) + (counts.SHORT_PUB||0);
+
+  $("#pubHeadline").innerHTML = [
+    {lbl: "Writers researched", val: n.toLocaleString(), sub: "100% of the 3,456-writer field"},
+    {lbl: "NYCM veterans", val: (counts.NYCM_VET||0), sub: ((counts.NYCM_VET||0)/n*100).toFixed(1)+"% · prior NYCM rankings"},
+    {lbl: "Traditionally pub'd", val: (counts.TRAD_PUB||0), sub: ((counts.TRAD_PUB||0)/n*100).toFixed(1)+"% of field"},
+    {lbl: "Any publication", val: credentialed.toLocaleString(), sub: (credentialed/n*100).toFixed(1)+"% credentialed"},
+    {lbl: "No findings", val: (counts.NONE||0).toLocaleString(), sub: ((counts.NONE||0)/n*100).toFixed(1)+"% · invisible online"},
+  ].map(s => `<div class="money-stat"><div class="lbl">${s.lbl}</div><div class="val" style="color:var(--ink)">${s.val}</div><div class="pct">${s.sub}</div></div>`).join("");
+
+  // Stacked bar — segments sized proportionally
   $("#pubFlowBar").innerHTML = order.map(b => {
     const c = counts[b]||0; if (!c) return "";
-    return `<div class="flow-seg" data-bucket="${b}" style="background:${PUB_BUCKETS[b].color};flex:${c};color:#0e1117;text-shadow:none;font-weight:700" title="${PUB_BUCKETS[b].desc}">${PUB_BUCKETS[b].label} · ${c} (${(c/n*100).toFixed(0)}%)</div>`;
+    return `<div class="flow-seg" data-bucket="${b}" style="background:${BUCKETS[b].color};flex:${c};color:#0e1117;text-shadow:none;font-weight:700" title="${BUCKETS[b].desc}">${BUCKETS[b].label} · ${c} (${(c/n*100).toFixed(1)}%)</div>`;
   }).join("");
   $("#pubFlowLegend").innerHTML = order.map(b => {
     const c = counts[b]||0; if (!c) return "";
-    return `<span><span class="dot" style="background:${PUB_BUCKETS[b].color}"></span>${PUB_BUCKETS[b].label}: ${c}</span>`;
+    return `<span><span class="dot" style="background:${BUCKETS[b].color}"></span>${BUCKETS[b].label}: ${c.toLocaleString()}</span>`;
   }).join("");
 
-  // Filter chips
-  const chipsHtml = [
+  // Filter chips + special "credentialed" chip
+  $("#pubFilters").innerHTML = [
     `<span class="lbl">Filter</span>`,
-    `<span class="pub-chip active" data-bucket="ALL">All <span class="count">${n}</span></span>`,
+    `<span class="pub-chip" data-bucket="ALL">All <span class="count">${n.toLocaleString()}</span></span>`,
+    `<span class="pub-chip active" data-bucket="CREDENTIALED" style="border-color:var(--accent);color:var(--accent)">Credentialed <span class="count">${credentialed.toLocaleString()}</span></span>`,
     ...order.map(b => {
       const c = counts[b]||0; if (!c) return "";
-      return `<span class="pub-chip" data-bucket="${b}">${PUB_BUCKETS[b].label} <span class="count">${c}</span></span>`;
+      return `<span class="pub-chip" data-bucket="${b}">${BUCKETS[b].label} <span class="count">${c.toLocaleString()}</span></span>`;
     }),
     `<span class="pub-status" id="pubStatus"></span>`
   ].join("");
-  $("#pubFilters").innerHTML = chipsHtml;
 
-  // Table rows — sort by bucket priority so filters group cleanly
-  const bucketRank = {TRAD_PUB:0, INDIE_PUB:1, SHORT_PUB:2, HOBBYIST:3, UNCLEAR:4, NONE:5};
-  const sorted = [...PUBLISHING_SAMPLE].sort((a,b) => bucketRank[a.bucket]-bucketRank[b.bucket] || a.name.localeCompare(b.name));
-  const rows = sorted.map(w => `<tr data-bucket="${w.bucket}" title="${w.note.replace(/"/g,'&quot;')}">
-    <td>${w.name}</td><td style="color:var(--ink-dim)">${w.loc}</td>
-    <td><span style="background:${PUB_BUCKETS[w.bucket].color};color:#0e1117;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700">${PUB_BUCKETS[w.bucket].label}</span></td>
-    <td style="color:var(--ink-dim);font-size:12px">${w.note}</td>
-  </tr>`).join("");
-  $("#pubTable").innerHTML = `<thead><tr><th>Writer</th><th>Location</th><th>Status</th><th>Note</th></tr></thead><tbody>${rows}</tbody>`;
+  // Sort: by bucket rank, then by name
+  const rank = {NYCM_VET:0, TRAD_PUB:1, INDIE_PUB:2, SHORT_PUB:3, HOBBYIST:4, UNCLEAR:5, NONE:6};
+  const sorted = [...WRITER_PUBS].sort((a,b) => rank[a.b]-rank[b.b] || a.n.localeCompare(b.n));
 
-  // Filter behavior
-  const applyFilter = (bucket) => {
-    const chips = $$(".pub-chip");
-    chips.forEach(c => c.classList.toggle("active", c.dataset.bucket === bucket));
-    const segs = $$("#pubFlowBar .flow-seg");
-    segs.forEach(s => s.classList.toggle("dim", bucket !== "ALL" && s.dataset.bucket !== bucket));
-    const rows = $$("#pubTable tbody tr");
-    let visible = 0;
-    rows.forEach(r => {
-      const match = bucket === "ALL" || r.dataset.bucket === bucket;
-      r.classList.toggle("hidden", !match);
-      if (match) visible++;
-    });
-    const status = $("#pubStatus");
-    if (status) status.textContent = bucket === "ALL"
-      ? `Showing all ${n} writers`
-      : `Showing ${visible} of ${n} writers · ${PUB_BUCKETS[bucket].desc}`;
+  const PAGE_SIZE = 200;
+  let filtered = sorted;
+  let visibleCount = PAGE_SIZE;
+
+  const renderTable = () => {
+    const slice = filtered.slice(0, visibleCount);
+    const rows = slice.map(w => {
+      const isGarske = /garske/i.test(w.n);
+      const star = isGarske ? ' ⭐' : '';
+      const noteHtml = (w.note || '').replace(/"/g,'&quot;');
+      return `<tr data-bucket="${w.b}"${isGarske ? ' style="background:#1a2614"' : ''}>
+        <td>${w.n}${star}</td>
+        <td style="color:var(--ink-dim)">${w.l}</td>
+        <td style="color:var(--ink-mute);text-align:center">G${w.g}</td>
+        <td><span style="background:${BUCKETS[w.b].color};color:#0e1117;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap">${BUCKETS[w.b].label}</span></td>
+        <td style="color:var(--ink-dim);font-size:12px">${noteHtml}</td>
+      </tr>`;
+    }).join("");
+    $("#pubTable").innerHTML = `<thead><tr><th>Writer</th><th>Location</th><th style="text-align:center">Group</th><th>Status</th><th>Note</th></tr></thead><tbody>${rows}</tbody>`;
+    if (visibleCount < filtered.length) {
+      $("#pubMore").innerHTML = `<button id="loadMore" style="background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:8px 18px;border-radius:6px;cursor:pointer;font-size:13px">Show ${Math.min(PAGE_SIZE, filtered.length - visibleCount)} more · ${visibleCount.toLocaleString()} of ${filtered.length.toLocaleString()} visible</button>`;
+      $("#loadMore").addEventListener("click", () => { visibleCount += PAGE_SIZE; renderTable(); });
+    } else {
+      $("#pubMore").innerHTML = filtered.length > PAGE_SIZE ? `All ${filtered.length.toLocaleString()} visible` : '';
+    }
+    $("#pubTableSubtitle").textContent = `showing ${Math.min(visibleCount, filtered.length).toLocaleString()} of ${filtered.length.toLocaleString()}`;
   };
-  applyFilter("ALL");
+
+  const applyFilter = (bucket) => {
+    $$(".pub-chip").forEach(c => c.classList.toggle("active", c.dataset.bucket === bucket));
+    $$("#pubFlowBar .flow-seg").forEach(s => s.classList.toggle("dim",
+      bucket !== "ALL" && bucket !== "CREDENTIALED" && s.dataset.bucket !== bucket ||
+      (bucket === "CREDENTIALED" && ["HOBBYIST","UNCLEAR","NONE"].includes(s.dataset.bucket))
+    ));
+
+    if (bucket === "ALL") filtered = sorted;
+    else if (bucket === "CREDENTIALED") filtered = sorted.filter(w => ["NYCM_VET","TRAD_PUB","INDIE_PUB","SHORT_PUB"].includes(w.b));
+    else filtered = sorted.filter(w => w.b === bucket);
+
+    visibleCount = PAGE_SIZE;
+    renderTable();
+
+    const status = $("#pubStatus");
+    if (status) {
+      if (bucket === "ALL") status.textContent = `Showing all ${n.toLocaleString()} writers`;
+      else if (bucket === "CREDENTIALED") status.textContent = `${credentialed.toLocaleString()} writers with any publication credit`;
+      else status.textContent = `${(counts[bucket]||0).toLocaleString()} writers · ${BUCKETS[bucket].desc}`;
+    }
+  };
+
+  applyFilter("CREDENTIALED");
   $$(".pub-chip").forEach(chip => chip.addEventListener("click", () => applyFilter(chip.dataset.bucket)));
   $$("#pubFlowBar .flow-seg").forEach(seg => seg.addEventListener("click", () => applyFilter(seg.dataset.bucket)));
 })();
