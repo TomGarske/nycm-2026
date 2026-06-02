@@ -761,8 +761,8 @@ const CHARITIES = [
   $("#pubFilters").innerHTML = [
     `<span class="lbl">Filter</span>`,
     `<span class="pub-chip" data-bucket="ALL">All <span class="count">${n.toLocaleString()}</span></span>`,
-    `<span class="pub-chip active" data-bucket="CREDENTIALED" style="border-color:var(--accent);color:var(--accent)">Credentialed <span class="count">${credentialed.toLocaleString()}</span></span>`,
-    `<span class="pub-chip" data-bucket="GARSKE" style="color:#ffb347">⭐ Garske groups only <span class="count">${garskeCount}</span></span>`,
+    `<span class="pub-chip" data-bucket="CREDENTIALED" style="border-color:var(--accent);color:var(--accent)">Credentialed <span class="count">${credentialed.toLocaleString()}</span></span>`,
+    `<span class="pub-chip active" data-bucket="GARSKE" style="color:#ffb347">⭐ Garske groups only <span class="count">${garskeCount}</span></span>`,
     ...order.map(b => {
       const c = counts[b]||0; if (!c) return "";
       return `<span class="pub-chip" data-bucket="${b}">${BUCKETS[b].label} <span class="count">${c.toLocaleString()}</span></span>`;
@@ -826,7 +826,7 @@ const CHARITIES = [
     }
   };
 
-  applyFilter("CREDENTIALED");
+  applyFilter("GARSKE");
   $$(".pub-chip").forEach(chip => chip.addEventListener("click", () => applyFilter(chip.dataset.bucket)));
   $$("#pubFlowBar .flow-seg").forEach(seg => seg.addEventListener("click", () => applyFilter(seg.dataset.bucket)));
 })();
