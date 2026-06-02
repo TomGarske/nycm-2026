@@ -261,7 +261,6 @@
     <div class="tab" data-tab="publishing">Publishing Status</div>
     <div class="tab" data-tab="compete">⚔️ Compete</div>
     <div class="tab" data-tab="finalists">Prior Finalists</div>
-    <div class="tab" data-tab="regions">Regions</div>
     <div class="tab" data-tab="catalog">All 86 Groups</div>
   </div>
 
@@ -311,25 +310,6 @@
     <table class="prize-table" id="pubTable"></table>
   </section>
 
-
-  <section class="panel-tab" data-pane="regions">
-    <div class="section-note">Where the 3,456 writers come from. The challenge is heavily US- and UK-skewed, but every group has international competitors.</div>
-    <div class="region-row">
-      <div class="panel">
-        <h3>Top countries</h3>
-        <div class="bar-list" id="countryBars"></div>
-      </div>
-      <div class="panel">
-        <h3>By continent</h3>
-        <div class="donut-row" id="continents"></div>
-      </div>
-    </div>
-    <div style="height:18px"></div>
-    <div class="panel">
-      <h3>Genre × Country tilt — which genres skew which way?</h3>
-      <div id="genreTilt"></div>
-    </div>
-  </section>
 
   <section class="panel-tab" data-pane="catalog">
     <div class="section-note">All 86 groups, stack-ranked by competitiveness. Score = +10 per prior 500FC finalist (2023-2025) found in this year's roster, +5 per NYCM medalist, +3 per traditionally-published author, +2 per indie author, +1 per short-form publisher. Most groups score 0 (no known threats); they'll get rescored as the full 3,456-writer publishing sweep completes. Garske groups are highlighted.</div>
@@ -701,46 +681,6 @@ const chip = (g) => {
   const color = GENRE_COLORS[g.genre] || "#444";
   return `<span class="chip" data-id="${g.id}" title="${g.genre} · ${g.action} · ${g.object}"><span class="gnum" style="background:${color}">#${g.id}</span><span class="gtitle">${g.action} · ${g.object}</span></span>`;
 };
-
-// Regions: top countries
-(() => {
-  const tot = {};
-  GROUPS.forEach(g => Object.entries(g.countries).forEach(([c, n]) => tot[c] = (tot[c] || 0) + n));
-  const list = Object.entries(tot).sort((a, b) => b[1] - a[1]);
-  const max = list[0][1];
-  $("#countryBars").innerHTML = list.slice(0, 25).map(([c, n]) => `
-    <div class="bar"><div class="lbl">${c}</div><div class="track"><div class="fill" style="width:${(n/max*100).toFixed(1)}%"></div></div><div class="v">${n}</div></div>
-  `).join("");
-
-  const contTot = {};
-  Object.entries(tot).forEach(([c, n]) => {
-    const cont = CONTINENT[c] || "Unknown";
-    contTot[cont] = (contTot[cont] || 0) + n;
-  });
-  const total = Object.values(contTot).reduce((s, n) => s + n, 0);
-  $("#continents").innerHTML = Object.entries(contTot).sort((a, b) => b[1] - a[1]).map(([c, n]) => `
-    <div class="donut-cell"><div class="name">${c}</div><div class="big">${n.toLocaleString()}</div><div class="sub">${(n/total*100).toFixed(1)}% of writers</div></div>
-  `).join("");
-
-  // Genre tilt
-  const tilt = {};
-  GROUPS.forEach(g => {
-    tilt[g.genre] = tilt[g.genre] || {};
-    Object.entries(g.countries).forEach(([c, n]) => tilt[g.genre][c] = (tilt[g.genre][c] || 0) + n);
-  });
-  const tiltSorted = Object.entries(tilt).sort((a, b) => Object.values(b[1]).reduce((s,n)=>s+n,0) - Object.values(a[1]).reduce((s,n)=>s+n,0));
-  $("#genreTilt").innerHTML = tiltSorted.map(([gen, counts]) => {
-    const tot = Object.values(counts).reduce((s, n) => s + n, 0);
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    const us = (counts["United States"] || 0) / tot;
-    const top5 = sorted.slice(0, 6).map(([c, n]) => `${c} ${Math.round(n/tot*100)}%`).join(" · ");
-    return `<div style="display:grid;grid-template-columns:200px 80px 1fr;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;align-items:center">
-      <div><span class="swatch" style="display:inline-block;width:10px;height:10px;background:${GENRE_COLORS[gen]||'#444'};border-radius:2px;margin-right:6px;vertical-align:middle"></span>${gen}</div>
-      <div style="color:var(--ink-dim)">US ${Math.round(us*100)}%</div>
-      <div style="color:var(--ink-mute)">${top5}</div>
-    </div>`;
-  }).join("");
-})();
 
 // Catalog
 (() => {
