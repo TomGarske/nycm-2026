@@ -286,6 +286,7 @@ const COMPETE = {
     loc: "Maple Grove, MN",
     group: 53,
     prompt: {genre: "Action and/or Adventure", action: "A fist bump", object: "A seashell"},
+    evalLine: "Deep in the pack — several indie pubs but no returning finalists.",
     summary: "Light field. No prior 500FC finalists, only 3 competitors with traceable book-length publishing. Top-10 cutoff looks achievable with a solid action-adventure execution.",
     tier1: [], // no confirmed prior finalists
     tier2: [
@@ -345,6 +346,7 @@ const COMPETE = {
     loc: "Denver, CO",
     group: 56,
     prompt: {genre: "Horror", action: "Decorating", object: "An anchor"},
+    evalLine: "Fell from #6 preliminary once the full sweep found 30 NYCM veterans across the field. Schreier + Jizba confirmed as the heavies; 2 indie + 5 short below.",
     summary: "Heaviest competition of the three groups. Two confirmed NYCM medalists (Schreier, Jizba) plus a serious litmag writer (Nedelka) and a near-Penguin novelist (Rhodes). No prior 500FC finalists, but MM Schreier has podium finishes in harder NYCM formats.",
     tier1: [
       {name: "MM Schreier", loc: '"Chilly by the Sea, Imagination"', bucket: "NYCM_VET", note: "NYCM Short Story 2nd (2024), Flash Fiction 3rd (2025) + 10th (2022); two short-story collections (Monstrosity, Humanity / Bruised, Resilient); pubs in Flash Fiction Online. The whimsical entry location matches her published bio verbatim. THE one to beat."},
@@ -408,6 +410,7 @@ const COMPETE = {
     prompt: {genre: "Romance", action: "Hiking", object: "A souvenir"},
     selfPub: "INDIE_PUB",
     selfPubNote: "★ Valerie writes as VJ Garske — indie fantasy author with 4+ titles: The Moonstone Legacy series (Raven, Dragon, Griffin Moonstone) and Cowboys, Wizards & Liars. Active Amazon storefront, Goodreads author profile, Literary Titan award coverage. Comes in with real craft.",
+    evalLine: "Slipped from the partial-data #1 spot once we found other groups' depth. Still tough — Acadia Hansen (prior finalist) + Shane Tilston NYCM + 3 indie. VJ Garske is herself part of that indie tier.",
     summary: "Valerie is herself a credentialed indie fantasy author (VJ Garske, 4+ titles). ONE confirmed prior 500FC finalist (Acadia Hansen, #7 in 2025) + three other credentialed competitors. With Valerie's own pub history, this becomes a top-2 contest for the lead slots — Acadia vs. Valerie — with ~4 other slots fought over by Bellani/Coelho/Greco and the unknowns.",
     tier1: [
       {name: "Acadia Hansen", loc: "Athens, OH", bucket: "NYCM_VET", note: "★ CONFIRMED 2025 500FC #7 FINALIST (story 'Olive Oil'). Already cleared every round to the top tier last year. Plan around her."},

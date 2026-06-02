@@ -328,7 +328,6 @@
 
   <div class="tabs" id="tabs">
     <div class="tab active" data-tab="rounds">Rounds</div>
-    <div class="tab" data-tab="economics">Economics</div>
     <div class="tab" data-tab="publishing">Publishing Status</div>
     <div class="tab" data-tab="compete">⚔️ Compete</div>
     <div class="tab" data-tab="finalists">Prior Finalists</div>
@@ -340,12 +339,13 @@
     <div class="section-note">Three rounds. Each round has a 48-hour writing window and a new prompt assignment. Only ~0.29% of writers reach the prize tier (10 winners out of 3,456 entrants). Past years' rules confirm round 2 swaps the action prompt for a <span style="color:var(--accent)">location</span> prompt, and the final round opens the genre.</div>
     <div id="funnelSvgWrap" style="margin: 8px 0 24px;"></div>
     <div class="funnel" id="funnel"></div>
-  </section>
 
-  <section class="panel-tab" data-pane="economics">
+    <hr style="border:0;border-top:1px solid var(--line);margin:40px 0 24px">
+
+    <h2 style="font-size:22px;margin:0 0 4px">Economics</h2>
     <div class="section-note">The challenge is funded by the writers. NYC Midnight takes ~$45 per entry. With 3,456 writers, that's <span class="strong" style="color:var(--ink)">~$155K</span> in fees collected. Roughly 8% goes back out as prize money, 2% goes to charity (writer's choice), and the rest funds judges, judging-feedback time, software, and the company itself.</div>
     <div class="money-headline" id="moneyHeadline"></div>
-    <h2>Where the $155,520 goes <span class="small">approximate</span></h2>
+    <h2 style="margin-top:24px">Where the $155,520 goes <span class="small">approximate</span></h2>
     <div class="flow">
       <div class="flow-bar" id="flowBar"></div>
       <div class="flow-legend" id="flowLegend"></div>
@@ -657,11 +657,22 @@ const CHARITIES = [
 
     const selfPubBadge = g.selfPub ? `<div style="margin:14px 0;padding:12px;background:linear-gradient(180deg,#1a2614,var(--panel2));border:1px solid #3a5e2c;border-radius:8px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:13px;font-weight:700;color:#a8d99c">${g.name}'s own publishing</span><span class="bk" style="background:#a8d99c;color:#0e1117;padding:1px 8px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase">${g.selfPub === 'INDIE_PUB' ? 'Indie published' : g.selfPub === 'TRAD_PUB' ? 'Trad published' : g.selfPub}</span></div><div style="color:var(--ink-dim);font-size:12px;line-height:1.5">${g.selfPubNote}</div></div>` : '';
 
+    // Compute rank from GROUP_SCORES
+    const allRanked = Object.keys(GROUP_SCORES).map(Number).sort((a,b) => (GROUP_SCORES[b].score - GROUP_SCORES[a].score) || (a - b));
+    const rank = allRanked.indexOf(g.group) + 1;
+    const sc = GROUP_SCORES[g.group] || {score: 0};
+    const grade = sc.score >= 30 ? 'S' : sc.score >= 20 ? 'A' : sc.score >= 10 ? 'B' : sc.score >= 5 ? 'C' : 'D';
+    const gradeColor = {S:'#ff7a8a',A:'#e7c069',B:'#9bb1ff',C:'#a8d99c',D:'#6b7480'}[grade];
+
     return `<div class="gar-card">
       <div class="gar-head">
         <h3>${g.name}</h3>
         <span class="who">${g.loc}</span>
-        <span class="grp">Group ${g.group}</span>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:8px">
+          <span style="background:${gradeColor};color:#0e1117;width:24px;height:22px;line-height:22px;text-align:center;border-radius:4px;font-weight:800;font-size:12px">${grade}</span>
+          <span style="color:var(--ink-dim);font-size:12px;font-weight:600">${sc.score}pt · #${rank} of 86</span>
+          <span class="grp">Group ${g.group}</span>
+        </span>
       </div>
       <div class="gar-body">
         <div class="gar-prompt">
@@ -669,6 +680,7 @@ const CHARITIES = [
           <div class="pp"><div class="k">Action</div><div class="v">${g.prompt.action}</div></div>
           <div class="pp"><div class="k">Object</div><div class="v">${g.prompt.object}</div></div>
         </div>
+        ${g.evalLine ? `<div style="margin:14px 0 0;padding:10px 12px;background:var(--panel2);border-left:3px solid ${gradeColor};border-radius:0 6px 6px 0;font-size:12px;color:var(--ink-dim)"><strong style="color:var(--ink);text-transform:uppercase;letter-spacing:0.4px;font-size:10px">Eval</strong> · ${g.evalLine}</div>` : ''}
         ${selfPubBadge}
         <div class="gar-summary">${g.summary}</div>
         ${tierBlocks.join("")}
@@ -741,11 +753,16 @@ const CHARITIES = [
     return `<span><span class="dot" style="background:${BUCKETS[b].color}"></span>${BUCKETS[b].label}: ${c.toLocaleString()}</span>`;
   }).join("");
 
-  // Filter chips + special "credentialed" chip
+  // Compute Garske-group writer count (G53/56/84)
+  const garskeGroupIds = new Set(['53','56','84']);
+  const garskeCount = WRITER_PUBS.filter(w => garskeGroupIds.has(String(w.g))).length;
+
+  // Filter chips: All / Credentialed / Garske groups / per-bucket
   $("#pubFilters").innerHTML = [
     `<span class="lbl">Filter</span>`,
     `<span class="pub-chip" data-bucket="ALL">All <span class="count">${n.toLocaleString()}</span></span>`,
     `<span class="pub-chip active" data-bucket="CREDENTIALED" style="border-color:var(--accent);color:var(--accent)">Credentialed <span class="count">${credentialed.toLocaleString()}</span></span>`,
+    `<span class="pub-chip" data-bucket="GARSKE" style="color:#ffb347">⭐ Garske groups only <span class="count">${garskeCount}</span></span>`,
     ...order.map(b => {
       const c = counts[b]||0; if (!c) return "";
       return `<span class="pub-chip" data-bucket="${b}">${BUCKETS[b].label} <span class="count">${c.toLocaleString()}</span></span>`;
@@ -788,12 +805,13 @@ const CHARITIES = [
   const applyFilter = (bucket) => {
     $$(".pub-chip").forEach(c => c.classList.toggle("active", c.dataset.bucket === bucket));
     $$("#pubFlowBar .flow-seg").forEach(s => s.classList.toggle("dim",
-      bucket !== "ALL" && bucket !== "CREDENTIALED" && s.dataset.bucket !== bucket ||
+      bucket !== "ALL" && bucket !== "CREDENTIALED" && bucket !== "GARSKE" && s.dataset.bucket !== bucket ||
       (bucket === "CREDENTIALED" && ["HOBBYIST","UNCLEAR","NONE"].includes(s.dataset.bucket))
     ));
 
     if (bucket === "ALL") filtered = sorted;
     else if (bucket === "CREDENTIALED") filtered = sorted.filter(w => ["NYCM_VET","TRAD_PUB","INDIE_PUB","SHORT_PUB"].includes(w.b));
+    else if (bucket === "GARSKE") filtered = sorted.filter(w => garskeGroupIds.has(String(w.g)));
     else filtered = sorted.filter(w => w.b === bucket);
 
     visibleCount = PAGE_SIZE;
@@ -803,6 +821,7 @@ const CHARITIES = [
     if (status) {
       if (bucket === "ALL") status.textContent = `Showing all ${n.toLocaleString()} writers`;
       else if (bucket === "CREDENTIALED") status.textContent = `${credentialed.toLocaleString()} writers with any publication credit`;
+      else if (bucket === "GARSKE") status.textContent = `${garskeCount} writers in the 3 Garske groups (G53 Benton, G56 Tom, G84 Valerie)`;
       else status.textContent = `${(counts[bucket]||0).toLocaleString()} writers · ${BUCKETS[bucket].desc}`;
     }
   };
