@@ -465,6 +465,36 @@ const COMPETE = {
   },
 };
 
+// Group competitiveness scoring (preliminary)
+// Scoring:
+//   +10 per prior 500FC finalist (top-10 or HM 2023-2025) found in 2026 roster
+//   +5  per NYCM_VET (verified prior NYCM ranking in any challenge)
+//   +3  per TRAD_PUB
+//   +2  per INDIE_PUB
+//   +1  per SHORT_PUB
+// Built from: (a) name-match of 50 prior 500FC finalists against full 3,456 roster,
+// (b) deep-research of the 3 Garske groups (53/56/84).
+// Will be updated as the full 3,456-writer publishing sweep completes.
+const GROUP_SCORES = {
+  84: {score: 21, finalists: 1, flags: ["★ Prior finalist: Acadia Hansen (2025 #7)", "Alexandria Bellani — NYCM vet", "Steph Coelho — pro writer/editor", "Ralph Greco — internationally pub", "Valerie Garske is herself indie (VJ Garske, 4+ titles)"]},
+  41: {score: 20, finalists: 2, flags: ["★★ TWO prior finalists: Dylan Archer (2024 HM)", "★★ Jennifer Gunner (2023 #5)"]},
+  43: {score: 20, finalists: 2, flags: ["★★ TWO prior finalists: John Curtis Bigelow (2025 #8)", "★★ Josephine Queen (2023 #2)"]},
+  59: {score: 20, finalists: 2, flags: ["★★ TWO prior finalists: JA Logwood (2024 HM)", "★★ Zoe Rose (2025 HM)"]},
+  64: {score: 20, finalists: 2, flags: ["★★ TWO prior finalists: Elizabeth Hakken Candido (2025 #9)", "★★ Miranda Lee (2025 #3)"]},
+  56: {score: 14, finalists: 0, flags: ["MM Schreier — NYCM Short Story 2nd 2024, FF 3rd 2025", "Susan Eileen Jizba — multi-year NYCM vet", "Shannon CC Nedelka — West Trade Review", "Rhonda Rhodes — agent + near-Penguin deal", "Zachary Arama — Fiction Attic Press"]},
+  12: {score: 10, finalists: 1, flags: ["★ Prior finalist + 2025 WINNER: Chloe Paige (\"'Roo Sprayers\")"]},
+  25: {score: 10, finalists: 1, flags: ["★ Prior finalist: Ben Daggers (2025 #5)"]},
+  27: {score: 10, finalists: 1, flags: ["★ Prior finalist: Avery Other (2023 HM, 2025 HM)"]},
+  38: {score: 10, finalists: 1, flags: ["★ Prior finalist: Ben Kaestner-Frenchman (2025 #4)"]},
+  46: {score: 10, finalists: 1, flags: ["★ Prior finalist: Kenton Smalley (2024 HM)"]},
+  58: {score: 10, finalists: 1, flags: ["★ Prior finalist: Lottie Green (2023 #8)"]},
+  79: {score: 10, finalists: 1, flags: ["★ Prior finalist: Autumn Bettinger (2025 #2)"]},
+  85: {score: 10, finalists: 1, flags: ["★ Prior finalist: Sally Demarest (2024 #5)"]},
+  53: {score: 6, finalists: 0, flags: ["Noor Amjad — indie action/fantasy novelist", "Adam Motz — indie children's book", "Jim Furry — indie + SWA short-story prize"]},
+};
+// Garske group IDs for highlighting
+const GARSKE_GROUPS = {53: "Benton", 56: "Tom", 84: "Valerie"};
+
 // Continent mapping for region rollup
 const CONTINENT = {
   "United States":"North America","Canada":"North America","Mexico":"North America",

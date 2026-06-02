@@ -240,6 +240,8 @@
   .fin-table td:nth-child(2){color:var(--ink);font-weight:600;width:200px}
   .fin-table tr.match td{background:#2a1c20}
   .fin-table tr.match td:nth-child(2)::after{content:" ◀ in Group 84"; color:var(--accent);font-weight:600;font-size:11px}
+  .fin-table td a{color:var(--ink-dim);text-decoration:none}
+  .fin-table td a:hover{color:var(--accent2);text-decoration:underline}
 </style>
 </head>
 <body>
@@ -260,10 +262,7 @@
     <div class="tab" data-tab="compete">⚔️ Compete</div>
     <div class="tab" data-tab="finalists">Prior Finalists</div>
     <div class="tab" data-tab="lanes">By Genre <span class="n">11</span></div>
-    <div class="tab" data-tab="object">By Object Theme <span class="n" id="oc">0</span></div>
-    <div class="tab" data-tab="action">By Action Theme <span class="n" id="ac">0</span></div>
     <div class="tab" data-tab="regions">Regions</div>
-    <div class="tab" data-tab="rivals">Closest Rivals</div>
     <div class="tab" data-tab="catalog">All 86 Groups</div>
   </div>
 
@@ -318,16 +317,6 @@
     <div class="lanes" id="lanes"></div>
   </section>
 
-  <section class="panel-tab" data-pane="object">
-    <div class="section-note">Groups bucketed by the kind of object they were given. Groups in the same bucket are competing on similar creative territory — e.g. eleven groups have to write a story revolving around a piece of food.</div>
-    <div class="cluster-grid" id="objectClusters"></div>
-  </section>
-
-  <section class="panel-tab" data-pane="action">
-    <div class="section-note">Groups bucketed by the type of action verb. Movement, eating, and social/romance verbs dominate this round.</div>
-    <div class="cluster-grid" id="actionClusters"></div>
-  </section>
-
   <section class="panel-tab" data-pane="regions">
     <div class="section-note">Where the 3,456 writers come from. The challenge is heavily US- and UK-skewed, but every group has international competitors.</div>
     <div class="region-row">
@@ -347,12 +336,8 @@
     </div>
   </section>
 
-  <section class="panel-tab" data-pane="rivals">
-    <div class="section-note">For each group, the three other groups with the most similar prompt. Similarity scoring: +3 same genre, +2 same object theme, +2 same action theme, +1 same word in the action, +1 same word in the object.</div>
-    <div class="rival-grid" id="rivals"></div>
-  </section>
-
   <section class="panel-tab" data-pane="catalog">
+    <div class="section-note">All 86 groups, stack-ranked by competitiveness. Score = +10 per prior 500FC finalist (2023-2025) found in this year's roster, +5 per NYCM medalist, +3 per traditionally-published author, +2 per indie author, +1 per short-form publisher. Most groups score 0 (no known threats); they'll get rescored as the full 3,456-writer publishing sweep completes. Garske groups are highlighted.</div>
     <div class="filterbar">
       <input id="search" placeholder="Search prompt or object…">
       <select id="filterGenre"><option value="">All genres</option></select>
@@ -611,8 +596,12 @@ const CHARITIES = [
   });
   const years = Object.keys(byYear).sort().reverse();
   $("#finalistsByYear").innerHTML = years.map(y => {
-    const rows = byYear[y].map(f => `<tr class="${matchNames.has(f.name)?'match':''}"><td>${f.place}</td><td>${f.name}</td><td>${f.story}</td></tr>`).join("");
-    return `<div class="year-block"><h3>${y} <span class="small">${byYear[y].length} writers · top-10 + Honorable Mentions</span></h3><table class="fin-table"><tbody>${rows}</tbody></table></div>`;
+    const rows = byYear[y].map(f => {
+      const q = encodeURIComponent(`"${f.story}" "${f.name}" nycmidnight`);
+      const url = `https://www.google.com/search?q=${q}`;
+      return `<tr class="${matchNames.has(f.name)?'match':''}"><td>${f.place}</td><td>${f.name}</td><td><a href="${url}" target="_blank" rel="noopener" title="Find this story online">${f.story} <span style="color:var(--ink-mute);font-size:10px">↗</span></a></td></tr>`;
+    }).join("");
+    return `<div class="year-block"><h3>${y} <span class="small">${byYear[y].length} writers · top-10 + Honorable Mentions · click any title to find the story online</span></h3><table class="fin-table"><tbody>${rows}</tbody></table></div>`;
   }).join("");
 })();
 
@@ -701,8 +690,6 @@ const CHARITIES = [
     {n: totalGenres, l: "Genres"},
     {n: allCountries.size, l: "Countries"},
   ].map(s => `<div class="stat"><div class="n">${s.n}</div><div class="l">${s.l}</div></div>`).join("");
-  $("#oc").textContent = Object.keys(OBJECT_THEMES).length;
-  $("#ac").textContent = Object.keys(ACTION_THEMES).length;
   $("#ts").textContent = new Date().toLocaleString();
 })();
 
@@ -734,30 +721,6 @@ const chip = (g) => {
         <span class="count">${list.length} groups · ${writers.toLocaleString()} writers</span>
       </div>
       <div class="lane-body">${list.sort((a,b)=>a.id-b.id).map(chip).join("")}</div>
-    </div>`;
-  }).join("");
-})();
-
-// Object clusters
-(() => {
-  const sorted = Object.entries(OBJECT_THEMES).sort((a, b) => b[1].length - a[1].length);
-  $("#objectClusters").innerHTML = sorted.map(([name, ids]) => {
-    const items = ids.map(id => groupsById[id]).filter(Boolean);
-    return `<div class="cluster">
-      <h3>${name}<span class="count">${items.length} groups</span></h3>
-      <div class="chips">${items.map(chip).join("")}</div>
-    </div>`;
-  }).join("");
-})();
-
-// Action clusters
-(() => {
-  const sorted = Object.entries(ACTION_THEMES).sort((a, b) => b[1].length - a[1].length);
-  $("#actionClusters").innerHTML = sorted.map(([name, ids]) => {
-    const items = ids.map(id => groupsById[id]).filter(Boolean);
-    return `<div class="cluster">
-      <h3>${name}<span class="count">${items.length} groups</span></h3>
-      <div class="chips">${items.map(chip).join("")}</div>
     </div>`;
   }).join("");
 })();
@@ -802,38 +765,6 @@ const chip = (g) => {
   }).join("");
 })();
 
-// Rivals
-(() => {
-  const tokens = s => new Set((s || "").toLowerCase().replace(/[^a-z ]/g," ").split(/\s+/).filter(x => x.length > 2 && !["the","and","for","with","into","one","off","out"].includes(x)));
-  function score(a, b) {
-    let s = 0;
-    if (a.genre === b.genre) s += 3;
-    if (a.objectTheme === b.objectTheme) s += 2;
-    if (a.actionTheme === b.actionTheme) s += 2;
-    const ta = tokens(a.action), tb = tokens(b.action);
-    for (const t of ta) if (tb.has(t)) s += 1;
-    const oa = tokens(a.object), ob = tokens(b.object);
-    for (const t of oa) if (ob.has(t)) s += 1;
-    return s;
-  }
-  const rivals = GROUPS.map(g => {
-    const others = GROUPS.filter(x => x.id !== g.id).map(x => ({g: x, s: score(g, x)})).sort((a, b) => b.s - a.s);
-    return {g, top: others.slice(0, 3)};
-  });
-  $("#rivals").innerHTML = rivals.map(({g, top}) => `
-    <div class="rival-card">
-      <div class="pivot"><span class="chip" style="cursor:pointer" data-id="${g.id}"><span class="gnum" style="background:${GENRE_COLORS[g.genre]||'#444'}">#${g.id}</span><span class="gtitle">${g.genre} · ${g.action} · ${g.object}</span></span></div>
-      <div class="rivals">${top.map(r => `
-        <div class="rival">
-          <span class="chip" data-id="${r.g.id}"><span class="gnum" style="background:${GENRE_COLORS[r.g.genre]||'#444'}">#${r.g.id}</span></span>
-          <span class="why">${r.g.genre} · ${r.g.action} · ${r.g.object}</span>
-          <span class="score">${r.s}</span>
-        </div>
-      `).join("")}</div>
-    </div>
-  `).join("");
-})();
-
 // Catalog
 (() => {
   const genres = Array.from(new Set(GROUPS.map(g => g.genre))).sort();
@@ -852,14 +783,28 @@ const chip = (g) => {
       if (q && !(`${g.genre} ${g.action} ${g.object}`).toLowerCase().includes(q)) return false;
       return true;
     });
-    $("#catalogCount").textContent = `${filtered.length} of ${GROUPS.length} groups`;
-    $("#catalog").innerHTML = filtered.sort((a,b)=>a.id-b.id).map(g => {
+    // Stack-rank by competitiveness score (desc), break ties by group id (asc)
+    filtered.sort((a, b) => {
+      const sa = (GROUP_SCORES[a.id] || {score: 0}).score;
+      const sb = (GROUP_SCORES[b.id] || {score: 0}).score;
+      return (sb - sa) || (a.id - b.id);
+    });
+    const scoredCount = filtered.filter(g => (GROUP_SCORES[g.id] || {score:0}).score > 0).length;
+    $("#catalogCount").textContent = `${filtered.length} of ${GROUPS.length} groups · ${scoredCount} have known threats`;
+    $("#catalog").innerHTML = filtered.map((g, i) => {
       const top = Object.entries(g.countries).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([c,n])=>`<span class="flag">${c} ${n}</span>`).join("");
-      return `<div class="card" data-id="${g.id}">
-        <div class="id">GROUP ${g.id}</div>
+      const sc = GROUP_SCORES[g.id];
+      const garske = GARSKE_GROUPS[g.id];
+      const score = sc ? sc.score : 0;
+      const rankBadge = score > 0 ? `<span style="background:${score>=20?'#9b3447':score>=10?'#705a30':'#3a5e2c'};color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.4px;margin-left:6px">${score}pt · #${i+1}</span>` : '';
+      const garskeBadge = garske ? `<span style="background:#ffb347;color:#0e1117;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.4px;margin-left:6px">${garske.toUpperCase()}</span>` : '';
+      const flags = sc && sc.flags.length ? `<div style="font-size:11px;color:var(--ink-dim);padding:6px 0 0;line-height:1.5">${sc.flags.map(f=>'• '+f).join('<br>')}</div>` : '';
+      return `<div class="card" data-id="${g.id}" style="${score>=20?'border-color:#5a2e35':score>=10?'border-color:#5e4b25':score>0?'border-color:#3a5e2c':''}">
+        <div class="id">GROUP ${g.id}${rankBadge}${garskeBadge}</div>
         <div class="gen" style="background:${GENRE_COLORS[g.genre]||'#444'};color:#fff">${g.genre.replace(' and/or ',' / ')}</div>
         <div class="ao"><span class="verb">${g.action}</span> · <span class="obj">${g.object}</span></div>
         <div class="meta">${top}<span class="flag">${g.writers} writers</span></div>
+        ${flags}
       </div>`;
     }).join("");
   }
